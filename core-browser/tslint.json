@@ -1,0 +1,38 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:recommended"],
+  "linterOptions": {
+    "exclude": ["node_modules/**"]
+  },
+  "rules": {
+    "quotemark": [true, "single", "jsx-double"],
+    "space-before-function-paren": false,
+    "interface-name": [false, "never-prefix"],
+    "adjacent-overload-signatures": true,
+    "arrow-parens": [false],
+    "member-access": [false],
+    "member-ordering": [
+      true,
+      {
+        "order": "fields-first"
+      }
+    ],
+    "object-literal-sort-keys": false,
+    "max-classes-per-file": [true, 10],
+    "variable-name": [false, "allow-leading-underscore"],
+    "align": [true, "statements"],
+    "trailing-comma": [false],
+    "object-literal-key-quotes": [false],
+    "semicolon": [true, "always"],
+    "ordered-imports": [false],
+    "no-return-await": [false],
+    "no-object-literal-type-assertion": [false],
+    "no-string-literal": [false],
+    "callable-types": [false],
+    "jsdoc-format": [false],
+    "max-line-length": [false],
+    "prefer-conditional-expression": [false],
+    "no-console": [false],
+    "class-name": [false]
+  }
+}
