@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import FileManager from '@/main/fs/file-manager';
-import fileType from 'file-type';
+import {fromBuffer} from 'file-type';
 import icojs from 'icojs';
 import sharp from 'sharp';
 import {
@@ -10,7 +10,6 @@ import {
   nativeImage,
   NativeImage
 } from 'electron';
-import {APP_EXISTS} from '@/share/global';
 import {Buffer} from 'buffer';
 import {EventProxy} from '@/main/native/event-proxy';
 import {getConfig} from '@/main/rs/config';
@@ -76,7 +75,7 @@ class ImageManager {
     if (!this.icons![url]) {
       const res = await FileManager.downLoad2Buffer(url);
       let data = Buffer.from(res.data, 'binary');
-      const type = fileType(data);
+      const type = await fromBuffer(data);
       if (type) {
         if (type.ext === 'ico') {
           const img = await icojs.parse(data, 'image/png');

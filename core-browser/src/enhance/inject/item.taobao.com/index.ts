@@ -1,1 +1,1 @@
-console.log('dom-ready hook!!!');
+console.log('dom-ready hook!!! taobao');
