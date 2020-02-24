@@ -1,0 +1,23 @@
+{
+  "name": "plugin-line",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ec-plugin-line",
+  "author": "jing-rise deverloper",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "types": "index.d.ts",
+  "scripts": {
+    "dist": "node ci.js",
+    "lint": "tslint --project . -c tslint.json"
+  },
+  "devDependencies": {
+    "@types/node": "13.7.0",
+    "electron": "8.0.1",
+    "tslib": "1.10.0",
+    "tslint": "6.0.0",
+    "typescript": "3.7.5"
+  }
+}
