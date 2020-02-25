@@ -3,8 +3,7 @@
  * 包含：可信任的地址列表
  */
 import {parse, UrlWithStringQuery} from 'url';
-import querystring from 'querystring';
-import {UrlInfo} from '@/typings';
+import {UrlInfo} from 'plugin-line';
 
 const trustHostName = [
   'erp.jingrise.com',

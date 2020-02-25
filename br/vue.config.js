@@ -41,14 +41,14 @@ for (const page of preLoadNames) {
   preLoads.push(page);
 }
 
-const injectNames = fs.readdirSync('./src/enhance/inject/');
-const injects = [];
-for (const page of injectNames) {
-  if (page === '.DS_Store') {
-    continue;
-  }
-  injects.push(page);
-}
+// const pluginNames = fs.readdirSync('./src/enhance/preload/');
+// const preLoads = [];
+// for (const page of preLoadNames) {
+//   if (page === '.DS_Store') {
+//     continue;
+//   }
+//   preLoads.push(page);
+// }
 
 module.exports = {
   chainWebpack: config => {
@@ -87,12 +87,6 @@ module.exports = {
           config
             .entry(`preload/${ preload }`)
             .add(`./src/enhance/preload/${ preload }/index.ts`)
-            .end();
-        }
-        for (const inject of injects) {
-          config
-            .entry(`inject/${ inject }`)
-            .add(`./src/enhance/inject/${ inject }/index.ts`)
             .end();
         }
         return config;

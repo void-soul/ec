@@ -1,7 +1,7 @@
 import {imageManager, devToolSwitch, uriParse, buildWebPreferences, confirm} from '@/main/util';
 import {ContextMenuParams, Event, BrowserView, BrowserWindow, Rectangle, MouseWheelInputEvent, webContents} from 'electron';
 import log from 'electron-log';
-import {UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint} from '@/typings';
+import {UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint} from 'plugin-line';
 import {DEF_TITLE, DEF_VIEW_POINT} from '@/share/global';
 import JingWindow from './window';
 const JINGVIEWS: {[id: number]: JingView} = {};
@@ -55,7 +55,6 @@ export default class JingView {
         break;
     }
     this.initEvent(view);
-    view.webContents.loadURL(this.url.fullUrl);
   }
   static fromId(id: number) {
     return JINGVIEWS[id];

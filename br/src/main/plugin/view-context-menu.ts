@@ -1,4 +1,4 @@
-import {JingPlugin, JingWindow, JingUtil, ContextMenu} from '@/typings';
+import {JingPlugin, JingWindow, JingUtil, ContextMenu} from 'plugin-line';
 export default abstract class extends JingPlugin {
   name: string = '右键菜单';
   description: string = '常用右键菜单,管理view和manager';
@@ -7,7 +7,7 @@ export default abstract class extends JingPlugin {
   needLogin: boolean = false;
   injects: {rule: RegExp; script: string[]; css: string[];}[] = [];
   win: JingWindow | null = null;
-  init(win: JingWindow, util: Util): void {
+  init(win: JingWindow, util: JingUtil): void {
     this.win = win;
   }
   destroy(): void {

@@ -2,9 +2,10 @@ import {imageManager, devToolSwitch, getConfig, newViewOption, windowPreferences
 import * as util from '@/main/util';
 import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/share/global';
 import {BrowserWindow, BrowserView, ContextMenuParams, webContents, WebContents, app} from 'electron';
-import {JingPlugin, ViewOption, ViewQuery, ViewFound} from '@/typings';
+import {JingPlugin, ViewOption, ViewQuery, ViewFound} from 'plugin-line';
 import JingView from '@/main/core/view';
 import path from 'path';
+import * as fs from 'fs';
 
 const JINGWINDOWS: {[id: number]: JingWindow} = {};
 
@@ -50,6 +51,7 @@ export default class JingWindow {
     // 加载view
     this.add(viewOption);
     window.loadURL(windowUrl.fullUrl);
+    this.initPlugin();
   }
   static fromId(id: number) {
     return JINGWINDOWS[id];
@@ -73,6 +75,7 @@ export default class JingWindow {
       view = new JingView(viewOption);
       this.push({view});
     }
+    view.refresh();
     // 判断viewMode决定是否激活
     if (view.viewMode !== 'CurrentWindowHide') {
       this.active({view});
@@ -224,10 +227,24 @@ export default class JingWindow {
   private initMenu(show = false) {
     //
   }
-  private initPlugin() {
+  private async initPlugin() {
     // 加载外置插件
-    const pluginPathOuter = path.join(app.getPath('exe'), '../plugin');
-    const pluginPathInner = '../plugin';
+    const pluginPathOuter = path.join(app.getPath('exe'), './plugin');
+    const pluginPathInner = './plugin';
 
+    // 读取文件
+    const filesInner = await fs.promises.readdir(pluginPathInner);
+    for (const file of filesInner) {
+      const plugin = new (await import(path.join(pluginPathInner, file)))(this, util) as Plugin;
+      plugin.inner = true;
+      this.plugins.push(plugin);
+    }
+
+    const filesOuter = await fs.promises.readdir(pluginPathOuter);
+    for (const file of filesOuter) {
+      const plugin = new (await import(path.join(pluginPathOuter, file)))(this, util) as Plugin;
+      plugin.inner = false;
+      this.plugins.push(plugin);
+    }
   }
 }

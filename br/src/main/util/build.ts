@@ -5,7 +5,7 @@ import {WebPreferences, app} from 'electron';
 import {WINDOW_CORE_URI} from '@/share/global';
 import {uriParse} from '@/main/util/uri';
 import {DEF_TITLE} from '@/share/global';
-import {ViewOption} from '@/typings';
+import {ViewOption} from 'plugin-line';
 import path from 'path';
 
 const preload = path.join(app.getAppPath(), 'preload', 'brage.js');

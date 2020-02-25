@@ -2,7 +2,6 @@ import fs from 'fs';
 import log from 'electron-log';
 import path from 'path';
 import {app} from 'electron';
-import {EventProxy} from '@/main/util/event-proxy';
 /**
  * 读取配置文件
  * 配置文件来源
@@ -25,5 +24,3 @@ config.platform = process.platform;
  * @param key 可见.env/.env.development/.env.production
  */
 export const getConfig = (key: string) => config[key] || process.env[key];
-// const eventProxy = new EventProxy({});
-// eventProxy.excute('config', (key: string) => getConfig(key));

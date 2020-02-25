@@ -7,7 +7,7 @@ import axios from 'axios';
 import {saveFileDialog} from '@/main/util/save-file';
 import {app} from 'electron';
 import log from 'electron-log';
-import {HttpData} from '@/typings';
+import {HttpData} from 'plugin-line';
 
 /**
  *

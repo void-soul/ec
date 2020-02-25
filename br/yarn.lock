@@ -8055,6 +8055,11 @@ pkg-up@^3.0.1:
   dependencies:
     find-up "^3.0.0"
 
+plugin-line@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.0.3.tgz#102c8ea6ae9967e25291ab327e45ca0e3e7b197a"
+  integrity sha512-JzdkDk9GElQZH4LXKXpEvc5ZHITaSLpnI5kao+hIRUPWOT29LrOE9/Pd1VqQ7NzTYRTKUhqOAbYTKJDoZVRwEw==
+
 pngjs@^3.3.3:
   version "3.4.0"
   resolved "https://registry.npm.taobao.org/pngjs/download/pngjs-3.4.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpngjs%2Fdownload%2Fpngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"

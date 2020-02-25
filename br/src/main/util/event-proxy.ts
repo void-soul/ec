@@ -1,5 +1,5 @@
 import {ipcMain, WebContents, BrowserWindow, BrowserView} from 'electron';
-import {ViewOption} from '@/typings';
+import {ViewOption} from 'plugin-line';
 import JingWindow from '@/main/core/window';
 import JingView from '@/main/core/view';
 

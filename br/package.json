@@ -69,6 +69,7 @@
     "electron-store": "5.1.0",
     "electron-updater": "4.2.2",
     "node-abi": "2.15.0",
+    "plugin-line": "1.0.3",
     "quasar": "1.9.3",
     "stylus": "0.54.7",
     "stylus-loader": "3.0.2",

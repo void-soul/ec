@@ -1,5 +1,4 @@
 import {dialog} from 'electron';
-import {getConfig} from '@/main/util/config';
 /**
  * 询问对话框
  * @param detail
