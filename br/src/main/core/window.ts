@@ -230,7 +230,7 @@ export default class JingWindow {
   private async initPlugin() {
     // 加载外置插件
     const pluginPathOuter = path.join(app.getPath('exe'), './plugin');
-    const pluginPathInner = './plugin';
+    const pluginPathInner = path.join(app.getAppPath(), 'plugin-inner');
 
     // 读取文件
     const filesInner = await fs.promises.readdir(pluginPathInner);
@@ -240,11 +240,11 @@ export default class JingWindow {
       this.plugins.push(plugin);
     }
 
-    const filesOuter = await fs.promises.readdir(pluginPathOuter);
-    for (const file of filesOuter) {
-      const plugin = new (await import(path.join(pluginPathOuter, file)))(this, util) as Plugin;
-      plugin.inner = false;
-      this.plugins.push(plugin);
-    }
+    // const filesOuter = await fs.promises.readdir(pluginPathOuter);
+    // for (const file of filesOuter) {
+    //   const plugin = new (await import(path.join(pluginPathOuter, file)))(this, util) as Plugin;
+    //   plugin.inner = false;
+    //   this.plugins.push(plugin);
+    // }
   }
 }

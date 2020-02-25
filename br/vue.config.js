@@ -41,14 +41,14 @@ for (const page of preLoadNames) {
   preLoads.push(page);
 }
 
-// const pluginNames = fs.readdirSync('./src/enhance/preload/');
-// const preLoads = [];
-// for (const page of preLoadNames) {
-//   if (page === '.DS_Store') {
-//     continue;
-//   }
-//   preLoads.push(page);
-// }
+const pluginNames = fs.readdirSync('./src/plugin-inner/');
+const plugins = [];
+for (const page of pluginNames) {
+  if (page === '.DS_Store') {
+    continue;
+  }
+  plugins.push(page);
+}
 
 module.exports = {
   chainWebpack: config => {
@@ -87,6 +87,12 @@ module.exports = {
           config
             .entry(`preload/${ preload }`)
             .add(`./src/enhance/preload/${ preload }/index.ts`)
+            .end();
+        }
+        for (const preload of plugins) {
+          config
+            .entry(`plugin-inner/${ preload }`)
+            .add(`./src/plugin-inner/${ preload }/index.ts`)
             .end();
         }
         return config;
