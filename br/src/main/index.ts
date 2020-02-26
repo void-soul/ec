@@ -1,7 +1,5 @@
-import {app, crashReporter} from 'electron';
-import {APP_EXISTS} from '@/share/global';
+import {app} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
-import {EventProxy} from '@/main/util/event-proxy';
 import {getConfig} from '@/main/util/config';
 import {homedir} from 'os';
 import JingWindow from '@/main/core/window';
@@ -20,13 +18,13 @@ app.once('ready', () => {
   if (!process.env.WEBPACK_DEV_SERVER_URL) {
     createProtocol('jing');
   }
-  // tslint:disable-next-line: no-unused-expression
+  /* eslint-disable no-new */
   new JingWindow({
     url: 'https://www.baidu.com',
     title: '新标签页',
     viewMode: 'CurrentWindowShow',
     closeMode: 'Forbid',
-    titleMode: 'Fixed',
+    titleMode: 'Fixed'
   });
   // ctrl+c 关闭
   if (getConfig('VUE_APP_DEV') === '1') {

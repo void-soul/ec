@@ -1,4 +1,4 @@
-import {ipcMain, WebContents, BrowserWindow, BrowserView} from 'electron';
+import {ipcMain, WebContents, BrowserWindow, BrowserView, FindInPageOptions} from 'electron';
 import {ViewOption} from 'plugin-line';
 import JingWindow from '@/main/core/window';
 import JingView from '@/main/core/view';
@@ -77,10 +77,10 @@ class Proxy {
           view.print();
         }
       })
-      .on('find', (event, id: number, txt: string, forward: boolean, findNext: boolean) => {
+      .on('find', (event, id: number, txt: string, options?: FindInPageOptions) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.print();
+          view.findInPage(txt, options);
         }
       })
       .on('stopFindInPage', (event, id: number) => {

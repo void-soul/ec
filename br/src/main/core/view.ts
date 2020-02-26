@@ -13,10 +13,10 @@ export default class JingView {
   url: UrlInfo;
   icon: string;
   title: string;
-  windowId: number = 0;
+  windowId = 0;
   viewMode: ViewMode;
-  canGoBack: boolean = false;
-  canGoForward: boolean = false;
+  canGoBack = false;
+  canGoForward = false;
   readonly closeMode: CloseMode;
   readonly titleMode: 'Fixed' | 'Follow';
   readonly point: ViewPoint;
@@ -24,7 +24,7 @@ export default class JingView {
   hasSetPointed = false;
   /** 是否是一个对话框？对话框是特殊的一类，可以接收内部事件调用 */
   isDialog = false;
-  loaded: boolean = false;
+  loaded = false;
   constructor (option: ViewOption) {
     this.title = option.title || DEF_TITLE;
     this.viewMode = option.viewMode;
@@ -183,11 +183,12 @@ export default class JingView {
     // 'remote-get-current-window'
     // 'remote-get-current-web-contents'
     // 'remote-get-guest-web-contents'
-
   }
+
   static fromId(id: number) {
     return JINGVIEWS[id];
   }
+
   async loadURL(url?: string, options?: LoadURLOptions) {
     if (this.loaded === true && this.closeMode === 'EnabledAndConfirm' && await confirm('所有未保存的数据都将丢失', `您确认要刷新${ this.title }吗`, '刷新提醒') === false) {
       return;
@@ -202,84 +203,111 @@ export default class JingView {
     }
     this.loaded = true;
   }
+
   stop() {
     webContents.fromId(this.webContentId).stop();
   }
+
   clearHistory() {
     webContents.fromId(this.webContentId).clearHistory();
   }
+
   goBack() {
     webContents.fromId(this.webContentId).goBack();
   }
+
   goForward() {
     webContents.fromId(this.webContentId).goForward();
   }
+
   goToIndex(index: number) {
     webContents.fromId(this.webContentId).goToIndex(index);
   }
+
   goToOffset(offset: number) {
     webContents.fromId(this.webContentId).goToOffset(offset);
   }
+
   async insertCSS(css: string, options?: InsertCSSOptions) {
     return await webContents.fromId(this.webContentId).insertCSS(css, options);
   }
+
   async removeInsertedCSS(key: string) {
     await webContents.fromId(this.webContentId).removeInsertedCSS(key);
   }
+
   async executeJavaScript(code: string, userGesture?: boolean) {
     return await webContents.fromId(this.webContentId).executeJavaScript(code, userGesture);
   }
+
   async executeJavaScriptInIsolatedWorld(worldId: number, scripts: WebSource[], userGesture?: boolean) {
     return await webContents.fromId(this.webContentId).executeJavaScriptInIsolatedWorld(worldId, scripts, userGesture);
   }
+
   undo() {
     webContents.fromId(this.webContentId).undo();
   }
+
   redo() {
     webContents.fromId(this.webContentId).redo();
   }
+
   cut() {
     webContents.fromId(this.webContentId).cut();
   }
+
   copy() {
     webContents.fromId(this.webContentId).copy();
   }
+
   copyImageAt(x: number, y: number) {
     webContents.fromId(this.webContentId).copyImageAt(x, y);
   }
+
   paste() {
     webContents.fromId(this.webContentId).paste();
   }
+
   pasteAndMatchStyle() {
     webContents.fromId(this.webContentId).pasteAndMatchStyle();
   }
+
   delete() {
     webContents.fromId(this.webContentId).delete();
   }
+
   selectAll() {
     webContents.fromId(this.webContentId).selectAll();
   }
+
   unselect() {
     webContents.fromId(this.webContentId).unselect();
   }
+
   replace(text: string) {
     webContents.fromId(this.webContentId).replace(text);
   }
+
   replaceMisspelling(text: string) {
     webContents.fromId(this.webContentId).replaceMisspelling(text);
   }
+
   async insertText(text: string) {
     await webContents.fromId(this.webContentId).insertText(text);
   }
+
   findInPage(text: string, options?: FindInPageOptions) {
     webContents.fromId(this.webContentId).findInPage(text, options);
   }
+
   stopFindInPage(action: 'clearSelection' | 'keepSelection' | 'activateSelection' = 'clearSelection') {
     webContents.fromId(this.webContentId).stopFindInPage(action);
   }
+
   send(channel: string, ...args: any) {
     webContents.fromId(this.webContentId).send(channel, ...args);
   }
+
   print(options?: WebContentsPrintOptions, callback?: (success: boolean, failureReason: 'cancelled' | 'failed') => void) {
     webContents.fromId(this.webContentId).print(options, callback);
   }

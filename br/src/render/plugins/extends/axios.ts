@@ -14,7 +14,7 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json;charset=utf-8',
     Accept: 'application/json'
   },
-  maxContentLength: Infinity,
+  maxContentLength: Infinity
 });
 const axiosHandelExcption = (message: string, status = 500, url: string) => {
   // 非用户异常
@@ -35,7 +35,7 @@ const axiosHandelExcption = (message: string, status = 500, url: string) => {
     status,
     message,
     type,
-    url,
+    url
   };
 };
 const axiosHandel = (response: any, url: string) => {
@@ -48,7 +48,7 @@ const axiosHandel = (response: any, url: string) => {
     return axiosHandelExcption(
       response.data.message,
       response.data.status || response.status,
-      url,
+      url
     );
   } else {
     return response.data;
@@ -58,20 +58,24 @@ export default class extends Last {
   async $get(url: string, param: any, error = false) {
     return await this.axiosMethod('get', url, param, error);
   }
+
   async $post(url: string, param: any, error = false) {
     return await this.axiosMethod('post', url, param, error);
   }
+
   async $delete(url: string, param: any, error = false) {
     return await this.axiosMethod('delete', url, param, error);
   }
+
   async $put(url: string, param: any, error = false) {
     return await this.axiosMethod('put', url, param, error);
   }
+
   private async axiosMethod(
     method: Method,
     url: string,
     param: any,
-    error = false,
+    error = false
   ) {
     let response: any;
     let params: any;
@@ -84,7 +88,7 @@ export default class extends Last {
     let result: any;
     try {
       const headers: {
-        [key: string]: any
+        [key: string]: any;
       } = {};
       // if (this.devid) {
       //   headers.devid = this.devid;
@@ -94,13 +98,13 @@ export default class extends Last {
         method,
         headers,
         params,
-        data,
+        data
       });
       result = axiosHandel(response, url);
     } catch (e) {
       result = {
         status: 500,
-        message: '网络请求错误~',
+        message: '网络请求错误~'
       };
     }
     if (result.status) {
@@ -113,7 +117,7 @@ export default class extends Last {
           position: 'bottom',
           multiLine: false,
           actions: [{icon: 'close', color: 'white'}],
-          timeout: 1500,
+          timeout: 1500
         });
       }
       throw result;

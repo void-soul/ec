@@ -18,38 +18,6 @@ for (const page of pagesNames) {
   };
 }
 
-const extensionNames = fs.readdirSync('./src/render/extensions/');
-const extensions = {};
-for (const page of extensionNames) {
-  if (page === '.DS_Store') {
-    continue;
-  }
-  extensions[page] = {
-    entry: `src/render/extensions/${ page }/index.js`,
-    template: 'public/index.html',
-    filename: `${ page }.html`,
-    title: process.env.VUE_APP_TITLE
-  };
-}
-
-const preLoadNames = fs.readdirSync('./src/enhance/preload/');
-const preLoads = [];
-for (const page of preLoadNames) {
-  if (page === '.DS_Store') {
-    continue;
-  }
-  preLoads.push(page);
-}
-
-// const pluginNames = fs.readdirSync('./src/plugin-inner/');
-// const plugins = [];
-// for (const page of pluginNames) {
-//   if (page === '.DS_Store') {
-//     continue;
-//   }
-//   plugins.push(page);
-// }
-
 module.exports = {
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src/main'));
@@ -61,10 +29,10 @@ module.exports = {
     target: 'node',
     node: {
       __dirname: false,
-      __filename: false,
+      __filename: false
     }
   },
-  transpileDependencies: [/[\\\/]node_modules[\\\/]quasar[\\\/]/],
+  transpileDependencies: [/[\\/]node_modules[\\/]quasar[\\/]/],
   publicPath: '',
   runtimeCompiler: true,
   productionSourceMap: false,
@@ -89,18 +57,10 @@ module.exports = {
           };
         };
         config.plugin('define').use(require('webpack/lib/DefinePlugin'), [resolveClientEnv()]);
-        for (const preload of preLoads) {
-          config
-            .entry(`preload/${ preload }`)
-            .add(`./src/enhance/preload/${ preload }/index.ts`)
-            .end();
-        }
-        // for (const preload of plugins) {
-        //   config
-        //     .entry(`plugin-inner/${ preload }`)
-        //     .add(`./src/plugin-inner/${ preload }/index.ts`)
-        //     .end();
-        // }
+        config
+          .entry('preload/index')
+          .add('./src/enhance/preload.ts')
+          .end();
         return config;
       },
       customFileProtocol: 'jing://./',
@@ -111,6 +71,7 @@ module.exports = {
       builderOptions: {
         appId: 'org.jingrise.erp',
         productName: 'ec',
+        // eslint-disable-next-line no-template-curly-in-string
         copyright: 'Copyright © year ${author}',
         asar: true,
         files: ['**/*', 'preload/**/*'],
@@ -142,8 +103,5 @@ module.exports = {
     },
     quasar: {}
   },
-  pages: {
-    ...pages,
-    ...extensions
-  }
+  pages
 };

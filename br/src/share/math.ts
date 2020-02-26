@@ -115,45 +115,56 @@ export class Bus {
   constructor (result) {
     this.result = num(result);
   }
+
   add(...args: any[]): this {
     this.result = add(this.result, ...args);
     return this;
   }
+
   sub(...args: any[]): this {
     this.result = sub(this.result, ...args);
     return this;
   }
+
   div(...args: any[]): this {
     this.result = div(this.result, ...args);
     return this;
   }
+
   mul(...args: any[]): this {
     this.result = mul(this.result, ...args);
     return this;
   }
+
   max(...args: any[]): this {
     this.result = max(this.result, ...args);
     return this;
   }
+
   min(...args: any[]): this {
     this.result = min(this.result, ...args);
     return this;
   }
+
   ac(): this {
     this.result = sub(0, this.result);
     return this;
   }
+
   abs(): this {
     this.result = Math.abs(this.result);
     return this;
   }
+
   round(numDigits: number, upOrDown?: number): this {
     this.result = round(this.result, numDigits, upOrDown);
     return this;
   }
+
   over(): number {
     return this.result;
   }
+
   money(
     style?: MoneyStyle,
     currency?: string,

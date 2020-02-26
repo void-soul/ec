@@ -1,6 +1,6 @@
 import * as http from 'http';
 import * as https from 'https';
-import {parse} from 'url';
+import {URL} from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from 'axios';
@@ -33,6 +33,7 @@ class FileManager {
       }
     });
   }
+
   /**
    *
    * 下载到临时文件
@@ -48,6 +49,7 @@ class FileManager {
       return '';
     }
   }
+
   /**
    *
    * 删除url下载的临时文件
@@ -64,6 +66,7 @@ class FileManager {
       }
     }
   }
+
   /**
    *
    * 下载为buffer
@@ -73,7 +76,7 @@ class FileManager {
    */
   downLoad2Buffer(url: string) {
     return new Promise((resolve: (data: HttpData) => void, reject) => {
-      const options: any = parse(url);
+      const options = new URL(url);
       let {request} = http;
       if (options.protocol === 'https:') {
         request = https.request;
@@ -110,7 +113,7 @@ class FileManager {
   private download2Path(url: string, filePath?: string): Promise<string> {
     return new Promise((resolve) => {
       if (url) {
-        const name = parse(url).pathname;
+        const name = new URL(url).pathname;
         if (name) {
           if (!filePath) {
             return resolve('');
@@ -131,6 +134,7 @@ class FileManager {
       }
     });
   }
+
   /**
    *
    * 解析路径
@@ -141,7 +145,7 @@ class FileManager {
    */
   private readUrl(url: string) {
     if (url) {
-      const name = parse(url).pathname;
+      const name = new URL(url).pathname;
       if (name) {
         const parseItem = path.parse(name);
         return {

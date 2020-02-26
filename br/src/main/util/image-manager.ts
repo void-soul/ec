@@ -26,8 +26,9 @@ const iconSize = {
  */
 class ImageManager {
   private icons: {
-    [key: string]: string
+    [key: string]: string;
   } | null;
+
   private defIcon: string;
   private defWindowIconNative: NativeImage;
   constructor () {
@@ -50,12 +51,15 @@ class ImageManager {
 
     this.icons = {};
   }
+
   getDefIcon() {
     return this.defIcon;
   }
+
   getWindowIcon() {
     return this.defWindowIconNative;
   }
+
   /**
    * 将远程url转换为icon
    *
@@ -81,6 +85,7 @@ class ImageManager {
     }
     return this.icons![url];
   }
+
   /**
    *
    * 从远程路径复制到剪贴板
@@ -93,6 +98,7 @@ class ImageManager {
     const img = nativeImage.createFromBuffer(data);
     clipboard.writeImage(img, 'clipboard');
   }
+
   /**
    *
    * 修正图片尺寸
@@ -101,7 +107,7 @@ class ImageManager {
    * @param {boolean} [local=true]
    * @memberof ImageManager
    */
-  async fixSize(filepath: string, local: boolean = true) {
+  async fixSize(filepath: string, local = true) {
     if (local === false) {
       filepath = await fileManager.downdLoad2Tmp(filepath);
       sharp.cache(false);
@@ -130,6 +136,7 @@ class ImageManager {
       }
     }
   }
+
   /**
    *
    * 重调图片大小

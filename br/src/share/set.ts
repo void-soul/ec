@@ -13,6 +13,7 @@ export default class SetEx<T> extends Set {
     this.key = key;
     this.replaceWhenExits = replaceWhenExits;
   }
+
   add(value: T): this {
     let flag = false;
     this.forEach((item) => {
@@ -33,6 +34,7 @@ export default class SetEx<T> extends Set {
     }
     return this;
   }
+
   add2(value: T): T {
     let flag = false;
     let tmp = value;
@@ -55,6 +57,7 @@ export default class SetEx<T> extends Set {
     }
     return tmp;
   }
+
   /**
    * 用key找到匹配的第一个对象
    * @param {*} value 这是对象的关键属性,而非对象
@@ -68,6 +71,7 @@ export default class SetEx<T> extends Set {
     }
     return null;
   }
+
   /**
    * 用key找到匹配的所有对象
    * @param {*} value 这是对象的关键属性,而非对象
@@ -82,6 +86,7 @@ export default class SetEx<T> extends Set {
     });
     return res;
   }
+
   /**
    *
    * 用函数回调找到匹配的第一个对象
@@ -96,6 +101,7 @@ export default class SetEx<T> extends Set {
     }
     return null;
   }
+
   /**
    *
    * 用函数回调找到匹配的所有对象
@@ -111,6 +117,7 @@ export default class SetEx<T> extends Set {
     });
     return res;
   }
+
   /**
    *
    * 是否存在key对应的对象
@@ -125,9 +132,11 @@ export default class SetEx<T> extends Set {
     }
     return false;
   }
+
   toArray(): T[] {
     return Array.from(this);
   }
+
   /**
    *
    * 删除key对应的对象

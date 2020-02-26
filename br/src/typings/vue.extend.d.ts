@@ -25,7 +25,6 @@ declare global {
       /** 获取系统配置 */
       config: (name: string) => string;
 
-
       /** 当前页面订阅一个通知,此后通过notivy发送消息时可收到 */
       sub: (channel: string, listener: (event: any, ...args: any[]) => void) => void;
       /** 取消订阅通知 */
@@ -47,7 +46,6 @@ declare global {
       /** 调用后台对象方法，有返回值、无promise */
       excute: (channel: string, ...args: any[]) => any;
 
-
       /** 全局缓存：取 */
       cached(...keys: string[]): {[key: string]: any};
       /** 全局缓存：删 */
@@ -58,7 +56,6 @@ declare global {
       cacheHave(key: string): boolean;
       /** 全局缓存：清 */
       cacheClear(): void;
-
 
       /** 当前视窗缓存：取 */
       windowCached(...keys: string[]): {[key: string]: any};

@@ -33,6 +33,6 @@ export const decode = (str: string, charset: 'utf-8' | 'gbk' = 'utf-8') => {
       i++;
     }
   }
-  const buf = new Buffer(bytes);
+  const buf = Buffer.from(bytes);
   return iconv.decode(buf, charset);
 };

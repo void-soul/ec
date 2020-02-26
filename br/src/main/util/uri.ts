@@ -2,7 +2,7 @@
  * 地址管理
  * 包含：可信任的地址列表
  */
-import {parse, UrlWithStringQuery} from 'url';
+import {UrlWithStringQuery, URL} from 'url';
 import {UrlInfo} from 'plugin-line';
 
 const trustHostName = [
@@ -21,7 +21,7 @@ const hostNameMethods = {
   }
 };
 export const uriParse = (urlStr: string): UrlInfo => {
-  const data = parse(urlStr, false);
+  const data = new URL(urlStr);
   const trustServer = trustHostName.includes(data.hostname || 'unknown');
   const buildIn = data.protocol === 'jing:';
   const https = data.protocol === 'https:';

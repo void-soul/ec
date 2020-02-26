@@ -8,7 +8,7 @@ export const devToolSwitch = (webContents: WebContents) => {
   if (getConfig('VUE_APP_DEV') === '1') {
     if (webContents.isDevToolsOpened() === false) {
       webContents.openDevTools({
-        mode: 'undocked',
+        mode: 'undocked'
       });
     } else if (webContents.isDevToolsFocused() === false) {
       webContents.devToolsWebContents.focus();

@@ -2,9 +2,9 @@
  * 窗体、视窗的构造选项
  */
 import {WebPreferences, app} from 'electron';
-import {WINDOW_CORE_URI} from '@/share/global';
+import {WINDOW_CORE_URI, DEF_TITLE} from '@/share/global';
 import {uriParse} from '@/main/util/uri';
-import {DEF_TITLE} from '@/share/global';
+
 import {ViewOption} from 'plugin-line';
 import path from 'path';
 
@@ -44,7 +44,7 @@ export const buildWebPreferences = (uri: string) => {
       sansSerif: 'Arial',
       monospace: 'Courier New',
       cursive: 'Script',
-      fantasy: 'Impact',
+      fantasy: 'Impact'
     },
     defaultMonospaceFontSize: 13,
     backgroundThrottling: true,
