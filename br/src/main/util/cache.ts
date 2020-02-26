@@ -23,8 +23,12 @@ export class Cache {
   }
   cache(target: {
     [key: string]: any
-  }): void {
-    Object.assign(_cache, target);
+  } | string, value?: any): void {
+    if (typeof target === 'string') {
+      _cache[target] = value;
+    } else {
+      Object.assign(_cache, target);
+    }
   }
   cacheHave(key: string): boolean {
     return _cache.hasOwnProperty(key);
@@ -35,18 +39,5 @@ export class Cache {
       delete _cache[key];
     }
   }
-  destroy() {
-    this.cacheClear();
-  }
 }
 export const cache = new Cache();
-
-// const eventProxy = new EventProxy({
-//   onExists: () => cache.destroy()
-// });
-// eventProxy
-//   .excute('cached', (...keys: string[]) => cache.cached(...keys))
-//   .excute('cacheRemove', (...keys: string[]) => cache.cacheRemove(...keys))
-//   .excute('cache', (target: {[key: string]: any}) => cache.cache(target))
-//   .excute('cacheHave', (key: string) => cache.cacheHave(key))
-//   .excute('cacheClear', () => cache.cacheClear());

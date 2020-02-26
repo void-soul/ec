@@ -13,7 +13,7 @@ import '@/main/util/cache';
 // import '@/main/menu/window-quick-menu';
 
 // const eventProxy = new EventProxy({});
-app.setPath('userData', resolve(homedir(), 'dmce'));
+app.setPath('userData', resolve(homedir(), 'ec'));
 // 禁用硬件加速
 app.disableHardwareAcceleration();
 app.once('ready', () => {
@@ -39,11 +39,11 @@ app.once('ready', () => {
       // eventProxy.do(APP_EXISTS);
     });
   }
-  // bug收集
-  crashReporter.start({
-    productName: 'dmce',
-    companyName: 'dmce',
-    ignoreSystemCrashHandler: true,
-    submitURL: 'https://sentry.io/api/1680858/minidump/?sentry_key=e2433fe4fd844359b2b61b2d227137f1'
-  });
+  // // bug收集
+  // crashReporter.start({
+  //   productName: 'ec',
+  //   companyName: 'ec',
+  //   ignoreSystemCrashHandler: true,
+  //   submitURL: 'https://sentry.io/api/1680858/minidump/?sentry_key=e2433fe4fd844359b2b61b2d227137f1'
+  // });
 });

@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "plugin-line"
+		},
+		{
+			"path": "view-manager-menu"
 		}
 	],
 	"settings": {}

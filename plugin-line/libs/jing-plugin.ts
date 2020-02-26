@@ -1,22 +1,11 @@
-import {JingWindow, JingUtil, ContextMenu} from 'plugin-line';
-import {ContextMenuParams} from 'electron';
+import {JingWindow, JingUtil, ContextMenu, ContextMenuParams} from 'plugin-line';
 export abstract class JingPlugin {
-  /** 名称 */
-  readonly name: string;
-  /** 描述 */
-  readonly description: string;
-  /** 插件的编号,必须保证唯一,使用UUID */
-  readonly code: string;
-  /** 版本 */
-  readonly version: string;
-  /** 是否需要登录才能使用 */
-  readonly needLogin: boolean;
   /** 脚本注入,rule=url;script\css 都是插件目录的相对路径指向的文件 */
   readonly injects: Array<{rule: RegExp; script: string[]; css: string[]}>;
   /** 所在窗体 */
-  readonly win: JingWindow;
+  protected readonly win: JingWindow;
   /** 工具辅助 */
-  readonly util: JingUtil;
+  protected readonly util: JingUtil;
   constructor (win: JingWindow, util: JingUtil) {
     this.win = win;
     this.util = util;

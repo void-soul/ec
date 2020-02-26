@@ -65,10 +65,10 @@ class Proxy {
           window.broadcast(channel, ...args);
         }
       })
-      .on('refresh', (event, id: number) => {
+      .on('loadURL', (event, id: number, url?: string) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.refresh();
+          view.loadURL(url);
         }
       })
       .on('print', (event, id: number) => {
@@ -83,10 +83,10 @@ class Proxy {
           view.print();
         }
       })
-      .on('stop-find', (event, id: number) => {
+      .on('stopFindInPage', (event, id: number) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.stopFind();
+          view.stopFindInPage();
         }
       })
       .on('dev', (event, id: number) => {
@@ -95,22 +95,22 @@ class Proxy {
           view.dev();
         }
       })
-      .on('forward', (event, id: number) => {
+      .on('goForward', (event, id: number) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.forward();
+          view.goForward();
         }
       })
-      .on('back', (event, id: number) => {
+      .on('goBack', (event, id: number) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.forward();
+          view.goBack();
         }
       })
       .on('stop', (event, id: number) => {
         const {view} = this.getWindow(event.sender, id);
         if (view) {
-          view.forward();
+          view.stop();
         }
       })
       .on('get-views', (event) => {

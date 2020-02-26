@@ -1,6 +1,6 @@
 {
   "name": "plugin-line",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "ec-plugin-line",
   "author": "jing-rise deverloper",
   "files": [
@@ -13,11 +13,12 @@
     "dist": "node ci.js",
     "lint": "tslint --project . -c tslint.json"
   },
+  "dependencies": {
+    "shelljs": "0.8.3"
+  },
   "devDependencies": {
     "@types/node": "13.7.0",
     "@types/shelljs": "0.8.6",
-    "electron": "8.0.1",
-    "shelljs": "0.8.3",
     "tslib": "1.10.0",
     "tslint": "6.0.0",
     "typescript": "3.7.5"

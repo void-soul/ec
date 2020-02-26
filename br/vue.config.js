@@ -41,14 +41,14 @@ for (const page of preLoadNames) {
   preLoads.push(page);
 }
 
-const pluginNames = fs.readdirSync('./src/plugin-inner/');
-const plugins = [];
-for (const page of pluginNames) {
-  if (page === '.DS_Store') {
-    continue;
-  }
-  plugins.push(page);
-}
+// const pluginNames = fs.readdirSync('./src/plugin-inner/');
+// const plugins = [];
+// for (const page of pluginNames) {
+//   if (page === '.DS_Store') {
+//     continue;
+//   }
+//   plugins.push(page);
+// }
 
 module.exports = {
   chainWebpack: config => {
@@ -89,12 +89,12 @@ module.exports = {
             .add(`./src/enhance/preload/${ preload }/index.ts`)
             .end();
         }
-        for (const preload of plugins) {
-          config
-            .entry(`plugin-inner/${ preload }`)
-            .add(`./src/plugin-inner/${ preload }/index.ts`)
-            .end();
-        }
+        // for (const preload of plugins) {
+        //   config
+        //     .entry(`plugin-inner/${ preload }`)
+        //     .add(`./src/plugin-inner/${ preload }/index.ts`)
+        //     .end();
+        // }
         return config;
       },
       customFileProtocol: 'jing://./',
@@ -103,8 +103,8 @@ module.exports = {
       mainProcessWatch: ['src/main/**/*', 'src/main/index.ts', 'src/preload/**/*'],
       mainProcessArgs: ['--experimental-worker'],
       builderOptions: {
-        appId: 'org.dmce.erp',
-        productName: 'dmce',
+        appId: 'org.jingrise.erp',
+        productName: 'ec',
         copyright: 'Copyright © year ${author}',
         asar: true,
         files: ['**/*', 'preload/**/*'],
