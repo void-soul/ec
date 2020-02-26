@@ -1,7 +1,5 @@
 import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow, JingUtil} from 'plugin-line';
 export default class extends JingPlugin {
-  injects: {rule: RegExp; script: string[]; css: string[]}[] = [];
-
   constructor (win: JingWindow, util: JingUtil) {
     super(win, util);
     console.log(win, util);

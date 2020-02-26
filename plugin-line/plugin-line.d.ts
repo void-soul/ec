@@ -539,8 +539,6 @@ declare module 'plugin-line' {
    *
    */
   abstract class JingPlugin {
-    /** 脚本注入,rule=url;script\css 都是插件目录的相对路径指向的文件 */
-    abstract readonly injects: Array<{rule: RegExp; script: string[]; css: string[]}>;
     /** 所在窗体 */
     protected readonly win: JingWindow;
     /** 工具辅助 */
