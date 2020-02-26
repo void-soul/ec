@@ -19,13 +19,7 @@ app.once('ready', () => {
     createProtocol('jing');
   }
   /* eslint-disable no-new */
-  new JingWindow({
-    url: 'https://www.baidu.com',
-    title: '新标签页',
-    viewMode: 'CurrentWindowShow',
-    closeMode: 'Forbid',
-    titleMode: 'Fixed'
-  });
+  new JingWindow();
   // ctrl+c 关闭
   if (getConfig('VUE_APP_DEV') === '1') {
     process.on('message', (data: string) => {

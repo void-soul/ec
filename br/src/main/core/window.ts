@@ -20,7 +20,7 @@ export default class JingWindow {
   webContentId: number;
   views: JingView[] = [];
   plugins: JingPlugin[] = [];
-  constructor (viewOption: ViewOption) {
+  constructor () {
     // 初始化窗体
     const window = new BrowserWindow({
       frame: false,
@@ -42,15 +42,11 @@ export default class JingWindow {
         window.maximize();
         devToolSwitch(window.webContents);
       })
-      .once('close', () => {
-        this.destroy();
-      })
+      .once('close', () => this.destroy())
       .webContents.on('context-menu', (_event: Event, params: ContextMenuParams) => {
         // TODO 右键菜单
         this.initMenu();
       });
-    // 加载view
-    this.add(viewOption);
     window.loadURL(windowUrl.fullUrl);
     this.initPlugin();
   }
@@ -244,13 +240,13 @@ export default class JingWindow {
   }
 
   private async initPlugin() {
-    // 设置插件目录
-    const pluginPath = path.join(app.getPath('userData'), 'plugin');
-    // 读取文件
-    const files = await fs.promises.readdir(pluginPath);
-    for (const file of files) {
-      const plugin = vm.runInNewContext(fs.readFileSync(path.join(pluginPath, file, 'index.js'), {encoding: 'utf-8'}).toString())(this, util) as Plugin;
-      this.plugins.push(plugin);
-    }
+    // // 设置插件目录
+    // const pluginPath = path.join(app.getPath('userData'), 'plugin');
+    // // 读取文件
+    // const files = await fs.promises.readdir(pluginPath);
+    // for (const file of files) {
+    //   const plugin = vm.runInNewContext(fs.readFileSync(path.join(pluginPath, file, 'index.js'), {encoding: 'utf-8'}).toString())(this, util) as Plugin;
+    //   this.plugins.push(plugin);
+    // }
   }
 }
