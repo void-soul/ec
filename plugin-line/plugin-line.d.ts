@@ -683,7 +683,4 @@ declare module 'plugin-line' {
     /** 业务广播事件 */
     broadcast(channel: string, ...args: any[]): void;
   }
-  interface BuildHelper {
-    build: () => void
-  }
 }

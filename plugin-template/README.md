@@ -1,24 +1,37 @@
 # view-menu
 
 ## Project setup
+
 ```
-yarn install
+yarn
 ```
 
-### Compiles and hot-reloads for development
+### Add a page
+
 ```
-yarn serve
+yarn line page pageName [full]
 ```
 
-### Compiles and minifies for production
+### Add a inject css
+
 ```
-yarn build
+yarn line css cssName
+```
+
+### Add a inject js
+
+```
+yarn line js jsName
 ```
 
 ### Lints and fixes files
+
 ```
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### build
+
+```
+yarn line build
+```

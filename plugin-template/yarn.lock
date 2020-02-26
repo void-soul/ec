@@ -851,11 +851,6 @@
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha1-KGLz9Yqaf3w+eNefEw3U1xwlwqc=
 
-"@types/firefox-webext-browser@^67.0.2":
-  version "67.0.2"
-  resolved "https://registry.npm.taobao.org/@types/firefox-webext-browser/download/@types/firefox-webext-browser-67.0.2.tgz#04625d3294fbca54bccf42dae43f636c5b6452a2"
-  integrity sha1-BGJdMpT7ylS8z0La5D9jbFtkUqI=
-
 "@types/glob@^7.1.1":
   version "7.1.1"
   resolved "https://registry.npm.taobao.org/@types/glob/download/@types/glob-7.1.1.tgz#aa59a1c6e3fbc421e07ccd31a944c30eba521575"
@@ -6400,11 +6395,12 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-plugin-line@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npm.taobao.org/plugin-line/download/plugin-line-1.0.5.tgz#a6c8df2b4b8744f3abdb4a6228c8673a3ba9303a"
-  integrity sha1-psjfK0uHRPOr20piKMhnOjupMDo=
+plugin-line@1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.1.7.tgz#3f54e03c1c9fb79180c808991b110f502d4957ca"
+  integrity sha512-cpqiayTZw0kpmboj8B0miC6M4XyQsBFa6uiFAqCdwIMGFSrvKHkrj+ChagiH0zlbPEw1WduuTAgcit739Wc3Ig==
   dependencies:
+    adm-zip "0.4.14"
     shelljs "0.8.3"
 
 pnp-webpack-plugin@^1.6.0:

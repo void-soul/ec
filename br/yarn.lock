@@ -1650,6 +1650,11 @@ adler-32@~1.2.0:
     exit-on-epipe "~1.0.1"
     printj "~1.1.0"
 
+adm-zip@0.4.14:
+  version "0.4.14"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.14.tgz#2cf312bcc9f8875df835b0f6040bd89be0a727a9"
+  integrity sha512-/9aQCnQHF+0IiCl0qhXoK7qs//SwYE7zX8lsr/DNk1BRAHYxeLZPL4pguwK29gUEqasYQjqPtEpDRSWEkdHn9g==
+
 after@0.8.2:
   version "0.8.2"
   resolved "https://registry.npm.taobao.org/after/download/after-0.8.2.tgz#fedb394f9f0e02aa9768e702bda23b505fae7e1f"
@@ -8060,11 +8065,12 @@ pkg-up@^3.0.1:
   dependencies:
     find-up "^3.0.0"
 
-plugin-line@1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.0.5.tgz#a6c8df2b4b8744f3abdb4a6228c8673a3ba9303a"
-  integrity sha512-cO1ZM0ASb4tNH/tJK7m0V0IjnsAo4Kb4qDQEhHyc0EtUBSNtcv2ZT9O1CyhvihdqsqCEWPEduse/jkY/SRBE4g==
+plugin-line@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.1.1.tgz#fdced34ffbccd550714cc3ffe9435c0fc3113a84"
+  integrity sha512-5CRvdUQqyQUwm+pwuIyv7TNSllUTvBv+UHjib/VO/PWmgpuCONBZz4uEhxiieyDL0kFMpw20P26hB0x6XLZfQw==
   dependencies:
+    adm-zip "0.4.14"
     shelljs "0.8.3"
 
 pngjs@^3.3.3:

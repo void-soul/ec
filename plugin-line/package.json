@@ -1,6 +1,6 @@
 {
   "name": "plugin-line",
-  "version": "1.1.1",
+  "version": "1.1.7",
   "description": "ec-plugin-line",
   "author": "jing-rise deverloper",
   "files": [
@@ -12,6 +12,9 @@
   "scripts": {
     "dist": "node ci.js",
     "lint": "tslint --project . -c tslint.json"
+  },
+  "bin": {
+    "line": "./libs/cli/index.js"
   },
   "dependencies": {
     "shelljs": "0.8.3",

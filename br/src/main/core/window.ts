@@ -236,7 +236,6 @@ export default class JingWindow {
     for (const file of files) {
       const plugin = vm.runInNewContext(fs.readFileSync(path.join(pluginPath, file, 'index.js'), {encoding: 'utf-8'}).toString())(this, util) as Plugin;
       this.plugins.push(plugin);
-      console.log(plugin.injects.length);
     }
   }
 }
