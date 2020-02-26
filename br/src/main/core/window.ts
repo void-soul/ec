@@ -230,11 +230,11 @@ export default class JingWindow {
   }
   private async initPlugin() {
     // 设置插件目录
-    const pluginPath = path.join(app.getPath('userData'), 'ec', 'plugin');
+    const pluginPath = path.join(app.getPath('userData'), 'plugin');
     // 读取文件
     const files = await fs.promises.readdir(pluginPath);
     for (const file of files) {
-      const plugin = vm.runInThisContext(fs.readFileSync(path.join(pluginPath, file, 'index.js'), {encoding: 'utf-8'}).toString())(this, util) as Plugin;
+      const plugin = vm.runInNewContext(fs.readFileSync(path.join(pluginPath, file, 'index.js'), {encoding: 'utf-8'}).toString())(this, util) as Plugin;
       this.plugins.push(plugin);
       console.log(plugin.injects.length);
     }
