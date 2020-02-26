@@ -57,7 +57,13 @@ module.exports = {
     config.resolve.alias.set('#', resolve('src/render/plugins'));
     config.resolve.alias.set('^', resolve('src/render/mixins'));
   },
-  configureWebpack: {},
+  configureWebpack: {
+    target: 'node',
+    node: {
+      __dirname: false,
+      __filename: false,
+    }
+  },
   transpileDependencies: [/[\\\/]node_modules[\\\/]quasar[\\\/]/],
   publicPath: '',
   runtimeCompiler: true,
