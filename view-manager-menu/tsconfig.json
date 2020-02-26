@@ -4,6 +4,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "strict": true,
+    "allowJs": true,
     "importHelpers": true,
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -11,6 +12,7 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "maxNodeModuleJsDepth": 1,
     "sourceMap": false,
     "outDir": "./dist",
     "lib": [

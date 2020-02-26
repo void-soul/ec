@@ -233,8 +233,8 @@ export default class JingWindow {
     // 读取文件
     const files = await fs.promises.readdir(pluginPath);
     for (const file of files) {
-      // const ddd = require(path.join(pluginPath, file, 'index.js'));
-      // console.log(ddd);
+      const ddd = require(path.join(pluginPath, file, 'index.js'));
+      console.log(ddd);
       // const plugin = new (await import(path.join(pluginPath, file, 'index.js')))(this, util) as Plugin;
       // this.plugins.push(plugin);
     }
