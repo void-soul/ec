@@ -2,9 +2,10 @@ import {imageManager, devToolSwitch, uriParse, buildWebPreferences, confirm} fro
 import {ContextMenuParams, Event, BrowserView, LoadURLOptions, webContents, InsertCSSOptions, WebSource, FindInPageOptions, WebContentsPrintOptions} from 'electron';
 import log from 'electron-log';
 import {UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint} from 'plugin-line';
-import {DEF_TITLE, DEF_VIEW_POINT} from '@/share/global';
+import {DEF_TITLE, DEF_VIEW_POINT} from '@/main/util/global';
 import JingWindow from './window';
-const JINGVIEWS: {[id: number]: JingView} = {};
+const JINGVIEW_VIEID: {[id: number]: JingView} = {};
+const JINGVIEW_CONID: {[id: number]: JingView} = {};
 
 export default class JingView {
   id: number;
@@ -20,10 +21,8 @@ export default class JingView {
   readonly closeMode: CloseMode;
   readonly titleMode: 'Fixed' | 'Follow';
   readonly point: ViewPoint;
-  /** 是否已经设置过位置？每个view只允许设置一次 */
   hasSetPointed = false;
-  /** 是否是一个对话框？对话框是特殊的一类，可以接收内部事件调用 */
-  isDialog = false;
+  isBuildIn = false;
   loaded = false;
   constructor (option: ViewOption) {
     this.title = option.title || DEF_TITLE;
@@ -32,15 +31,16 @@ export default class JingView {
     this.titleMode = option.titleMode;
     this.point = option.point || DEF_VIEW_POINT;
     this.url = uriParse(option.url);
-    this.isDialog = this.viewMode === 'Dialog' || this.viewMode === 'DialogFullHeight' || this.viewMode === 'DialogFullWidth';
+    this.isBuildIn = this.viewMode === 'Dialog' || this.viewMode === 'DialogFullHeight' || this.viewMode === 'DialogFullWidth';
     const view = new BrowserView({
       webPreferences: buildWebPreferences(option.url)
     });
     this.id = view.id;
     this.webContentId = view.webContents.id;
+    JINGVIEW_VIEID[this.id] = this;
+    JINGVIEW_CONID[this.webContentId] = this;
     this.icon = imageManager.getDefIcon();
     this.netState = 'none';
-    JINGVIEWS[this.id] = this;
     switch (this.viewMode) {
       case 'CurrentWindowShow':
       case 'CurrentWindowHide':
@@ -61,19 +61,19 @@ export default class JingView {
         const window = JingWindow.fromId(this.windowId);
         window.notice('did-finish-load', this.id);
       })
-      // eventCode 在 neterror 文件中
-      .on('did-fail-load', (_event: Event, eventCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
-        log.error(`fail-load:${ validatedURL },code: ${ eventCode }, error: ${ errorDescription },isMainFrame: ${ isMainFrame }`);
-        if (eventCode < -100 && (this.url!.fullUrl === validatedURL || `${ this.url!.fullUrl }/` === validatedURL)) {
+      // errorCode 在 neterror 文件中
+      .on('did-fail-load', (_event: Event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+        log.error(`fail-load:${ validatedURL },code: ${ errorCode }, error: ${ errorDescription },isMainFrame: ${ isMainFrame }`);
+        if (errorCode < -100 && (this.url!.fullUrl === validatedURL || `${ this.url!.fullUrl }/` === validatedURL)) {
           this.netState = 'failed';
           const window = JingWindow.fromId(this.windowId);
-          window.notice('did-fail-load', this.id, eventCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
+          window.notice('did-fail-load', this.id, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
         }
       })
-      .on('did-fail-provisional-load', (_event: Event, eventCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+      .on('did-fail-provisional-load', (_event: Event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
         this.netState = 'cancel';
         const window = JingWindow.fromId(this.windowId);
-        window.notice('did-fail-provisional-load', this.id, eventCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
+        window.notice('did-fail-provisional-load', this.id, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
       })
       // 'did-frame-finish-load' 框架：例如页面内的广告
       .on('did-start-loading', () => {
@@ -186,9 +186,11 @@ export default class JingView {
   }
 
   static fromId(id: number) {
-    return JINGVIEWS[id];
+    return JINGVIEW_VIEID[id];
   }
-
+  static fromContentId(id: number) {
+    return JINGVIEW_CONID[id];
+  }
   async loadURL(url?: string, options?: LoadURLOptions) {
     if (this.loaded === true && this.closeMode === 'EnabledAndConfirm' && await confirm('所有未保存的数据都将丢失', `您确认要刷新${ this.title }吗`, '刷新提醒') === false) {
       return;
@@ -319,7 +321,8 @@ export default class JingView {
         return;
       }
       view.destroy();
-      delete JINGVIEWS[this.id];
+      delete JINGVIEW_VIEID[this.id];
+      delete JINGVIEW_CONID[this.webContentId];
     }
   }
 

@@ -1,6 +1,6 @@
 import {imageManager, devToolSwitch, getConfig, newViewOption, windowPreferences, windowUrl} from '@/main/util';
 import * as util from '@/main/util';
-import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/share/global';
+import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/main/util/global';
 import {BrowserWindow, BrowserView, ContextMenuParams, webContents, app} from 'electron';
 import {JingPlugin, ViewOption, ViewQuery, ViewFound} from 'plugin-line';
 import JingView from '@/main/core/view';
@@ -8,7 +8,8 @@ import path from 'path';
 import * as fs from 'fs';
 import vm from 'vm';
 
-const JINGWINDOWS: {[id: number]: JingWindow} = {};
+const JINGWIN_WINID: {[id: number]: JingWindow} = {};
+const JINGWIN_CONID: {[id: number]: JingWindow} = {};
 
 interface Plugin extends JingPlugin {
   inner: boolean;
@@ -16,10 +17,10 @@ interface Plugin extends JingPlugin {
 
 export default class JingWindow {
   id: number;
-  activeId = 0;
   webContentId: number;
   views: JingView[] = [];
-  plugins: JingPlugin[] = [];
+  private plugins: JingPlugin[] = [];
+  private activeId = 0;
   constructor () {
     // 初始化窗体
     const window = new BrowserWindow({
@@ -33,8 +34,9 @@ export default class JingWindow {
       show: false
     });
     this.id = window.id;
-    JINGWINDOWS[window.id] = this;
     this.webContentId = window.webContents.id;
+    JINGWIN_WINID[window.id] = this;
+    JINGWIN_CONID[this.webContentId] = this;
     // 窗体事件初始化
     window
       .once('ready-to-show', () => {
@@ -52,11 +54,15 @@ export default class JingWindow {
   }
 
   static fromId(id: number) {
-    return JINGWINDOWS[id];
+    return JINGWIN_WINID[id];
+  }
+
+  static fromContentId(id: number) {
+    return JINGWIN_CONID[id];
   }
 
   static getAllJingWindows() {
-    return Object.values(JINGWINDOWS);
+    return Object.values(JINGWIN_WINID);
   }
 
   open(url: string) {
@@ -88,6 +94,7 @@ export default class JingWindow {
     if (jingView) {
       jingView.windowId = this.id;
       this.views.push(jingView);
+      this.notice('add-view', jingView);
     }
   }
 
@@ -99,6 +106,7 @@ export default class JingWindow {
     });
     if (view) {
       this.views.splice(index, 1);
+      this.notice('remove-view', view.id);
       if (close === true) {
         view.destroy(true);
       }
@@ -122,7 +130,8 @@ export default class JingWindow {
       plugin.destroy();
     }
     this.plugins.splice(0, this.plugins.length);
-    delete JINGWINDOWS[this.id];
+    delete JINGWIN_WINID[this.id];
+    delete JINGWIN_CONID[this.webContentId];
   }
 
   active(query?: ViewQuery) {
@@ -140,6 +149,8 @@ export default class JingWindow {
             this.point(view, browserView, window);
             view.viewMode = 'CurrentWindowShow';
             this.initMenu();
+
+            this.notice('active-view', view.id);
           }
           break;
         case 'DialogFullHeight':
@@ -159,7 +170,7 @@ export default class JingWindow {
 
   notice(channel: string, ...args: any[]) {
     for (const view of this.views) {
-      if (view.isDialog) {
+      if (view.isBuildIn) {
         webContents.fromId(view.webContentId).send(channel, ...args);
       }
       webContents.fromId(this.webContentId).send(channel, ...args);
@@ -168,7 +179,7 @@ export default class JingWindow {
 
   broadcast(channel: string, ...args: any[]) {
     for (const view of this.views) {
-      if (view.isDialog === false) {
+      if (view.isBuildIn === false) {
         webContents.fromId(view.webContentId).send(channel, ...args);
       }
     }
@@ -205,6 +216,10 @@ export default class JingWindow {
         view: null
       };
     }
+  }
+
+  getViews() {
+    return this.views.filter(item => item.isBuildIn === false);
   }
 
   /** 初始化view的位置信息 */

@@ -10,134 +10,65 @@ import JingView from '@/main/core/view';
  */
 class Proxy {
   constructor () {
-    ipcMain
-      .on('open', (event, url: string) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.open(url);
-        }
-      })
-      .on('add', (event, viewOption: ViewOption) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.add(viewOption);
-        }
-      })
-      .on('push', (event, id: number) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.push({id});
-        }
-      })
-      .on('remove', (event, id: number) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.remove({id});
-        }
-      })
-      .on('close', (event, id: number) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.remove({id}, true);
-        }
-      })
-      .on('destroy', (event) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.destroy();
-        }
-      })
-      .on('active', (event, id: number) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.active({id});
-        }
-      })
-      .on('sort', (event, id: number, toIndex: number) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.sort(id, toIndex);
-        }
-      })
-      .on('broadcast', (event, channel: string, ...args: any[]) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          window.broadcast(channel, ...args);
-        }
-      })
-      .on('loadURL', (event, id: number, url?: string) => {
-        const {view} = this.getWindow(event.sender, id);
+    ipcMain.on('on=jing=window', (event, id: number, methodName: string, ...args: any[]) => {
+      const window = id ? JingWindow.fromId(id) : JingWindow.fromContentId(event.sender.id);
+      if (window) {
+        window[`${ methodName }`](...args)
+      }
+    }).handle('handel=jing=window', async (event, id: number, methodName: string, ...args: any[]) => {
+      const window = id ? JingWindow.fromId(id) : JingWindow.fromContentId(event.sender.id);
+      if (window) {
+        return await window[`${ methodName }`](...args)
+      }
+    });
+    ipcMain.on('on=jing=view', (event, id: number, methodName: string, ...args: any[]) => {
+      const view = id ? JingView.fromId(id) : JingView.fromContentId(event.sender.id);
+      if (view) {
+        view[`${ methodName }`](...args)
+      }
+    }).handle('handel=jing=view', async (event, id: number, methodName: string, ...args: any[]) => {
+      const view = id ? JingView.fromId(id) : JingView.fromContentId(event.sender.id);
+      if (view) {
+        return await view[`${ methodName }`](...args)
+      }
+    });
+    ipcMain.on('get=id', (event) => {
+      const window = JingWindow.fromContentId(event.sender.id);
+      if (window) {
+        return {
+          view: 0,
+          window: window.id
+        };
+      } else {
+        const view = JingView.fromContentId(event.sender.id);
         if (view) {
-          view.loadURL(url);
+          return {
+            window: view.windowId,
+            view: view.id
+          }
         }
-      })
-      .on('print', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.print();
-        }
-      })
-      .on('find', (event, id: number, txt: string, options?: FindInPageOptions) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.findInPage(txt, options);
-        }
-      })
-      .on('stopFindInPage', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.stopFindInPage();
-        }
-      })
-      .on('dev', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.dev();
-        }
-      })
-      .on('goForward', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.goForward();
-        }
-      })
-      .on('goBack', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.goBack();
-        }
-      })
-      .on('stop', (event, id: number) => {
-        const {view} = this.getWindow(event.sender, id);
-        if (view) {
-          view.stop();
-        }
-      })
-      .on('get-views', (event) => {
-        const {window} = this.getWindow(event.sender);
-        if (window) {
-          event.returnValue = window.views.filter(item => item.isDialog === false);
-        }
-      })
-      .on('get-windows', (event) => {
-        event.returnValue = JingWindow.getAllJingWindows();
-      });
+      }
+      return {
+        view: 0,
+        window: 0
+      };
+    });
   }
 
-  getWindow(webContent: WebContents, viewId?: number) {
+  getWindow(webContent: WebContents, id: {window?: number; view?: number}) {
     const window = BrowserWindow.fromWebContents(webContent);
     if (window) {
       return {
-        window: JingWindow.fromId(window.id),
-        view: viewId ? JingView.fromId(viewId) : null
+        window: id.window ? JingWindow.fromId(window.id) : JingWindow.fromId(window.id),
+        view: id.view ? JingView.fromId(id.view) : null
       };
     } else {
       const view = BrowserView.fromWebContents(webContent);
       if (view) {
         const jingView = JingView.fromId(view.id);
         return {
-          window: JingWindow.fromId(jingView.windowId),
-          view: viewId ? JingView.fromId(viewId) : jingView
+          window: id.window ? JingWindow.fromId(id.window) : JingWindow.fromId(jingView.windowId),
+          view: id.view ? JingView.fromId(id.view) : jingView
         };
       }
     }

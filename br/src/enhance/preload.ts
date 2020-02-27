@@ -1,86 +1,59 @@
 import {ipcRenderer} from 'electron';
-import {TO_FRONT, DO_BACK, MY_INFO, INVOKE_BACK, SUB, UN_SUB, EXCUTE_BACK} from '@/share/global';
-import cloneDeep from 'lodash.clonedeep';
-ipcRenderer.send('ddd');
-const {windowid, viewid} = {windowid: 0, viewid: 0};
+const {windowid, viewid} = ipcRenderer.sendSync('get-id');
 window.brage = {
   windowid,
   viewid,
-  activeid() {
-    return this.excute(`window-active-view-id-${ windowid }`);
-  },
-  config(name: string) {
-    return this.excute('config', name);
-  },
-
-  sub: (channel: string, listener: (event: any, ...args: any[]) => any) => {
-    ipcRenderer.send(SUB, channel);
-    ipcRenderer.on(channel, listener);
-  },
-  unsub: (channel: string, listener?: (event: any, ...args: any[]) => any) => {
-    if (listener) {
-      ipcRenderer.removeListener(channel, listener);
-    } else {
-      ipcRenderer.removeAllListeners(channel);
-    }
-    if (ipcRenderer.listenerCount(channel) === 0) {
-      ipcRenderer.send(UN_SUB, channel);
+  getWindow(_windowid?: number) {
+    _windowid = _windowid || 0;
+    return {
+      destroy: () => ipcRenderer.send('on=jing=window', _windowid, 'destroy'),
+      open: (url) => ipcRenderer.send('on=jing=window', _windowid, 'open', url),
+      add: (viewOption) => ipcRenderer.send('on=jing=window', _windowid, 'add', viewOption),
+      push: (query) => ipcRenderer.send('on=jing=window', _windowid, 'push', query),
+      remove: (query?, close?) => ipcRenderer.send('on=jing=window', _windowid, 'remove', query, close),
+      active: (query?) => ipcRenderer.send('on=jing=window', _windowid, 'active', query),
+      sort: (id, toIndex) => ipcRenderer.send('on=jing=window', _windowid, 'sort', id, toIndex),
+      notice: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'notice', channel, ...args),
+      broadcast: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'broadcast', channel, ...args),
+      getViews: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getViews')
     }
   },
-  notify: (channel: string, ...args: any[]) => {
-    ipcRenderer.send(TO_FRONT, channel, ...args);
-  },
-
-  do: (channel: string, ...args: any[]) => {
-    ipcRenderer.send(DO_BACK, channel, ...args);
-  },
-
-  on: (channel: string, listener: (event: any, ...args: any[]) => any) => {
-    ipcRenderer.on(channel, listener);
-  },
-  off: (channel: string, listener?: (event: any, ...args: any[]) => any) => {
-    if (listener) {
-      ipcRenderer.removeListener(channel, listener);
-    } else {
-      ipcRenderer.removeAllListeners(channel);
+  getView(_viewid?: number) {
+    _viewid = _viewid || 0;
+    return {
+      loadURL: (url?, options?) => ipcRenderer.send('on=jing=view', _viewid, 'loadURL', url, options),
+      stop: () => ipcRenderer.send('on=jing=view', _viewid, 'stop'),
+      clearHistory: () => ipcRenderer.send('on=jing=view', _viewid, 'clearHistory'),
+      goBack: () => ipcRenderer.send('on=jing=view', _viewid, 'goBack'),
+      goForward: () => ipcRenderer.send('on=jing=view', _viewid, 'goForward'),
+      goToIndex: (index) => ipcRenderer.send('on=jing=view', _viewid, 'goToIndex', index),
+      goToOffset: () => ipcRenderer.send('on=jing=view', _viewid, 'goToOffset'),
+      insertCSS: (css, options) => ipcRenderer.invoke('handel=jing=view', _viewid, 'insertCSS', css, options),
+      removeInsertedCSS: (key) => ipcRenderer.send('on=jing=view', _viewid, 'removeInsertedCSS', key),
+      executeJavaScript: (code, userGesture?) => ipcRenderer.invoke('handel=jing=view', _viewid, 'executeJavaScript', code, userGesture),
+      executeJavaScriptInIsolatedWorld: (worldId, scripts, userGesture?) => ipcRenderer.invoke('handel=jing=view', _viewid, 'executeJavaScriptInIsolatedWorld', worldId, scripts, userGesture),
+      undo: () => ipcRenderer.send('on=jing=view', _viewid, 'undo'),
+      redo: () => ipcRenderer.send('on=jing=view', _viewid, 'redo'),
+      cut: () => ipcRenderer.send('on=jing=view', _viewid, 'cut'),
+      copy: () => ipcRenderer.send('on=jing=view', _viewid, 'copy'),
+      copyImageAt: (x: number, y: number) => ipcRenderer.send('on=jing=view', _viewid, 'copyImageAt', x, y),
+      paste: () => ipcRenderer.send('on=jing=view', _viewid, 'paste'),
+      pasteAndMatchStyle: () => ipcRenderer.send('on=jing=view', _viewid, 'pasteAndMatchStyle'),
+      delete: () => ipcRenderer.send('on=jing=view', _viewid, 'delete'),
+      selectAll: () => ipcRenderer.send('on=jing=view', _viewid, 'selectAll'),
+      unselect: () => ipcRenderer.send('on=jing=view', _viewid, 'unselect'),
+      replace: (text) => ipcRenderer.send('on=jing=view', _viewid, 'replace', text),
+      replaceMisspelling: (text) => ipcRenderer.send('on=jing=view', _viewid, 'replaceMisspelling', text),
+      insertText: (text) => ipcRenderer.send('on=jing=view', _viewid, 'insertText', text),
+      findInPage: (text, options?) => ipcRenderer.send('on=jing=view', _viewid, 'findInPage', text, options),
+      stopFindInPage: (action?) => ipcRenderer.send('on=jing=view', _viewid, 'stopFindInPage', action),
+      print: (options?) => ipcRenderer.send('on=jing=view', _viewid, 'print', options),
+      destroy: (ask) => ipcRenderer.send('on=jing=view', _viewid, 'destroy', ask),
+      dev: () => ipcRenderer.send('on=jing=view', _viewid, 'dev')
     }
   },
-
-  invoke: async (channel: string, ...args: any[]) => ipcRenderer.invoke(INVOKE_BACK, channel, ...args),
-
-  excute: (channel: string, ...args: any[]) => ipcRenderer.sendSync(EXCUTE_BACK, channel, ...args),
-
-  cached(...keys: string[]) {
-    const data = this.excute('cached', ...keys);
-    return cloneDeep(data);
-  },
-  cacheRemove(...keys: string[]) {
-    this.excute('cacheRemove', ...keys);
-  },
-  cache(target: {[key: string]: any}) {
-    this.excute('cache', target);
-  },
-  cacheHave(key: string) {
-    return this.excute('cacheHave', key);
-  },
-  cacheClear() {
-    this.excute('cacheClear');
-  },
-
-  windowCached(...keys: string[]) {
-    const data = this.excute(`window-cached-${ windowid }`, ...keys);
-    return cloneDeep(data);
-  },
-  windowCacheRemove(...keys: string[]) {
-    this.excute(`window-cacheRemove-${ windowid }`, ...keys);
-  },
-  windowCache(target: {[key: string]: any}) {
-    this.excute(`window-cache-${ windowid }`, target);
-  },
-  windowCacheHave(key: string) {
-    return this.excute(`window-cacheHave-${ windowid }`, key);
-  },
-  windowCacheClear() {
-    this.excute(`window-cacheClear-${ windowid }`);
-  }
+  notice: {
+    on: (channel: string, listener: (...args: any[]) => void) => ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags))
+  } as NoticeEvent,
+  broadcast: (channel: string, listener: (...args: any[]) => void) => ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags))
 };

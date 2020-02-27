@@ -2,7 +2,7 @@
  * 窗体、视窗的构造选项
  */
 import {WebPreferences, app} from 'electron';
-import {WINDOW_CORE_URI, DEF_TITLE} from '@/share/global';
+import {WINDOW_CORE_URI, DEF_TITLE} from '@/main/util/global';
 import {uriParse} from '@/main/util/uri';
 
 import {ViewOption} from 'plugin-line';

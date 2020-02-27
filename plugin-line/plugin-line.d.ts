@@ -375,6 +375,43 @@ declare module 'plugin-line' {
      */
     vertical?: number;
   }
+  interface Rectangle {
+
+    // Docs: http://electronjs.org/docs/api/structures/rectangle
+
+    /**
+     * The height of the rectangle (must be an integer).
+     */
+    height: number;
+    /**
+     * The width of the rectangle (must be an integer).
+     */
+    width: number;
+    /**
+     * The x coordinate of the origin of the rectangle (must be an integer).
+     */
+    x: number;
+    /**
+     * The y coordinate of the origin of the rectangle (must be an integer).
+     */
+    y: number;
+  }
+  interface Result {
+    requestId: number;
+    /**
+     * Position of the active match.
+     */
+    activeMatchOrdinal: number;
+    /**
+     * Number of Matches.
+     */
+    matches: number;
+    /**
+     * Coordinates of first match region.
+     */
+    selectionArea: Rectangle;
+    finalUpdate: boolean;
+  }
   interface UrlInfo extends Url {
     /** 调整、解析后的完整地址 */
     fullUrl: string;
@@ -583,8 +620,8 @@ declare module 'plugin-line' {
     readonly point: ViewPoint;
     /** 是否已经设置过位置？每个view只允许设置一次 */
     hasSetPointed: boolean;
-    /** 是否是一个对话框？对话框是特殊的一类，可以接收内部事件调用 */
-    isDialog: boolean;
+    /** 是否内部专用的、功能特殊的插件产生的页面？这种页面可接收 window、view变动事件 */
+    isBuildIn: boolean;
     /** 是否加载过 */
     loaded: boolean;
     constructor (viewOption: ViewOption);
@@ -669,7 +706,7 @@ declare module 'plugin-line' {
     /** 通过完整的选项新增一个view */
     add(viewOption: ViewOption): void;
     /** 追加一个view */
-    push(jingView: JingView): void;
+    push(query: ViewQuery): void;
     /** 移除一个view，可指定是否关闭 */
     remove(query?: ViewQuery, close?: boolean): void;
     /** 匹配已经存在的view */
@@ -677,10 +714,127 @@ declare module 'plugin-line' {
     /** 激活view */
     active(query?: ViewQuery): void;
     /** 从一个位置移动到另一个位置 */
-    sort(fromIndex: number, toIndex: number): void;
+    sort(id: number, toIndex: number): void;
     /** 通知内部事件 */
     notice(channel: string, ...args: any[]): void;
     /** 业务广播事件 */
     broadcast(channel: string, ...args: any[]): void;
+    /** 获取视图列表 */
+    getViews(): JingView[];
+  }
+}
+declare global {
+
+  interface JingViewMir {
+    /** 【有变更】url不传时，表示刷新 https://www.electronjs.org/docs/api/web-contents#contentsloadurlurl-options */
+    loadURL(url?: string | undefined, options?: LoadURLOptions | undefined): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsstop */
+    stop(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsclearhistory */
+    clearHistory(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsgoback */
+    goBack(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsgoforward */
+    goForward(): void;
+    /** 跳到指定 https://www.electronjs.org/docs/api/web-contents#contentsgotoindexindex */
+    goToIndex(index: number): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsgotooffsetoffset */
+    goToOffset(offset: number): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsinsertcsscss-options */
+    insertCSS(css: string, options?: InsertCSSOptions | undefined): Promise<string>;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsremoveinsertedcsskey */
+    removeInsertedCSS(key: string): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsexecutejavascriptcode-usergesture */
+    executeJavaScript(code: string, userGesture?: boolean | undefined): Promise<any>;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsexecutejavascriptinisolatedworldworldid-scripts-usergesture */
+    executeJavaScriptInIsolatedWorld(worldId: number, scripts: WebSource[], userGesture?: boolean | undefined): Promise<any>;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsundo */
+    undo(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsredo */
+    redo(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentscut */
+    cut(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentscopy */
+    copy(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentscopyimageatx-y */
+    copyImageAt(x: number, y: number): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentspaste */
+    paste(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentspasteandmatchstyle */
+    pasteAndMatchStyle(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsdelete */
+    delete(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsselectall */
+    selectAll(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsunselect */
+    unselect(): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsreplacetext */
+    replace(text: string): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsreplacemisspellingtext */
+    replaceMisspelling(text: string): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsinserttexttext */
+    insertText(text: string): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsfindinpagetext-options */
+    findInPage(text: string, options?: FindInPageOptions | undefined): void;
+    /** 【有变更】默认clearSelection  https://www.electronjs.org/docs/api/web-contents#contentsstopfindinpageaction */
+    stopFindInPage(action?: "clearSelection" | "keepSelection" | "activateSelection"): void;
+    /** https://www.electronjs.org/docs/api/web-contents#contentsprintoptions-callback */
+    print(options?: WebContentsPrintOptions | undefined): void;
+    /** 注销 */
+    destroy(ask?: boolean): void;
+    /** 切换开发者工具 */
+    dev(): void;
+  }
+  interface JingWindowMir {
+    /** 注销window */
+    destroy(): void;
+    /** 通过url打开一个view */
+    open(url: string): void;
+    /** 通过完整的选项新增一个view */
+    add(viewOption: ViewOption): void;
+    /** 追加一个view */
+    push(query: ViewQuery): void;
+    /** 移除一个view，可指定是否关闭 */
+    remove(query?: ViewQuery, close?: boolean): void;
+    /** 激活view */
+    active(query?: ViewQuery): void;
+    /** 从一个位置移动到另一个位置 */
+    sort(id: number, toIndex: number): void;
+    /** 通知内部事件 */
+    notice(channel: string, ...args: any[]): void;
+    /** 业务广播事件 */
+    broadcast(channel: string, ...args: any[]): void;
+    /** 获取视图列表 */
+    getViews(): Promise<JingView[]>;
+  }
+  class NoticeEvent {
+    on(channel: 'did-finish-load', listener: (viewid: number) => void): void;
+    on(channel: 'did-fail-load', listener: (viewid: number, errorCode: number, errorDescription: string, validatedURL: string, isMainFrame: boolean, frameProcessId: number, frameRoutingId: number) => void): void;
+    on(channel: 'did-fail-provisional-load', listener: (viewid: number, errorCode: number, errorDescription: string, validatedURL: string, isMainFrame: boolean, frameProcessId: number, frameRoutingId: number) => void): void;
+    on(channel: 'did-start-loading', listener: (viewid: number) => void): void;
+    on(channel: 'did-stop-loading', listener: (viewid: number) => void): void;
+    on(channel: 'page-title-updated', listener: (viewid: number, title: string, explicitSet: boolean) => void): void;
+    on(channel: 'page-favicon-updated', listener: (viewid: number, title: string, icon: string) => void): void;
+    on(channel: 'page-url-updated', listener: (viewid: number, url: UrlInfo) => void): void;
+    on(channel: 'found-in-page', listener: (viewid: number, result: Result) => void): void;
+    on(channel: 'add-view', listener: (view: JingView) => void): void;
+    on(channel: 'remove-view', listener: (viewid: number) => void): void;
+    on(channel: 'active-view', listener: (viewid: number) => void): void;
+  }
+  interface Window {
+    brage: {
+      /** 当前所在视窗id */
+      windowid: number;
+      /** 当前所在窗体id */
+      viewid?: number;
+      /** 获取一个window对象 */
+      getWindow(id?: number): JingWindowMir;
+      /** 获取一个view对象 */
+      getView(id?: number): JingViewMir;
+      /** 监听内部事件 */
+      notice: NoticeEvent;
+      /** 监听业务事件 */
+      broadcast: (channel: string, listener: (...args: any[]) => void) => void;
+    };
   }
 }
