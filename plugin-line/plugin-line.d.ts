@@ -573,22 +573,30 @@ declare module 'plugin-line' {
    * 目录结构为
    * index.js
    * 同级文件：icon.png 可选
-   *
+   * TODO:
+   * 1：创建一个全局管理对象-需要有一个全局的活动windowid、viewid变量
+   * 2：appReady时，建立此对象
+   * 3：全局对象可以叫JingApp，全局唯一对象
+   * 4：菜单由此对象管理
+   * 5：插件由此对象管理
    */
   abstract class JingPlugin {
-    /** 所在窗体 */
-    protected readonly win: JingWindow;
     /** 工具辅助 */
     protected readonly util: JingUtil;
-    constructor (win: JingWindow, util: JingUtil);
-    /** 卸载时回调 */
-    abstract destroy(): void;
+    /** 程序启动时会创建插件 */
+    constructor (util: JingUtil);
+    /** 当创建新window时调用此函数 */
+    abstract onNewWindow(win: JingWindow): void;
+    /** 注册全局快捷键时调用 */
+    abstract shotMenu(win: JingWindow, viewId?: number): ContextMenu[];
     /** 在window上右键点击、window的全局菜单时，本插件追加的右键菜单,此菜单只会在窗口初始化时、view变化调用 */
-    abstract windowMenu(viewId?: number): ContextMenu[];
+    abstract windowContext(win: JingWindow, viewId?: number): ContextMenu[];
     /** 在view上右键点击时，本插件追加的右键菜单 */
-    abstract viewMenu(param: ContextMenuParams): ContextMenu[];
+    abstract viewContext(win: JingWindow, param: ContextMenuParams): ContextMenu[];
     /** 右键菜单点击时 */
     abstract onContextClick(param: ContextMenuParams, menuId: string): void;
+    /** 关闭程序时调用 */
+    abstract destroy(): void;
   }
   /** 视窗定义 */
   class JingView {
@@ -696,8 +704,6 @@ declare module 'plugin-line' {
     id: number;
     /** 窗体的视窗集合 */
     views: JingView[];
-    /** 窗体的插件集合 */
-    plugins: JingPlugin[];
     constructor (viewOption: ViewOption);
     /** 注销window */
     destroy(): void;
