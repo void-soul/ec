@@ -492,6 +492,8 @@ declare module 'plugin-line' {
       fromId(id: number): JingWindow;
       /** 获取到所有window */
       getAllJingWindows(): JingWindow[];
+      /** 获取到当前活动window */
+      getFocusedWindow(): JingWindow;
     };
     /** view管理 */
     view: {
@@ -568,7 +570,7 @@ declare module 'plugin-line' {
     readonly id: string;
     readonly accelerator?: string;
   }
-  /** 插件接口定义,可以在global中获取到activeWindowId */
+  /** 插件接口定义 */
   abstract class JingPlugin {
     /** 工具辅助 */
     protected readonly util: JingUtil;
@@ -717,8 +719,6 @@ declare module 'plugin-line' {
   }
 }
 declare global {
-  activeWindowId: number;
-
   interface JingViewMir {
     /** 【有变更】url不传时，表示刷新 https://www.electronjs.org/docs/api/web-contents#contentsloadurlurl-options */
     loadURL(url?: string | undefined, options?: LoadURLOptions | undefined): void;

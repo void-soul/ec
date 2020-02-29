@@ -11,6 +11,7 @@ import {jingApp} from './app';
 
 const JINGWIN_WINID: {[id: number]: JingWindow} = {};
 const JINGWIN_CONID: {[id: number]: JingWindow} = {};
+let ACTIVE_WINID = 0;
 
 interface Plugin extends JingPlugin {
   inner: boolean;
@@ -38,6 +39,9 @@ export default class JingWindow {
     this.webContentId = window.webContents.id;
     JINGWIN_WINID[window.id] = this;
     JINGWIN_CONID[this.webContentId] = this;
+    if (ACTIVE_WINID === 0) {
+      ACTIVE_WINID = this.id;
+    }
     // 窗体事件初始化
     window
       .once('ready-to-show', () => {
@@ -46,7 +50,7 @@ export default class JingWindow {
         devToolSwitch(window.webContents);
       })
       .on('focus', () => {
-        jingApp.activeWindowId = this.id;
+        ACTIVE_WINID = this.id;
       })
       .once('close', () => this.destroy())
       .webContents.on('context-menu', (_event: Event, params: ContextMenuParams) => {
@@ -64,6 +68,10 @@ export default class JingWindow {
 
   static getAllJingWindows() {
     return Object.values(JINGWIN_WINID);
+  }
+
+  static getFocusedWindow() {
+    return JINGWIN_WINID[ACTIVE_WINID];
   }
 
   open(url: string) {

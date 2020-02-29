@@ -1,8 +1,6 @@
 import {JingPlugin, ContextMenuParams} from 'plugin-line';
 import JingWindow from '@/main/core/window';
 class JingApp {
-  /** 当前活跃的windowid */
-  activeWindowId: number = 0;
   private plugins: JingPlugin[] = [];
   constructor () {
 

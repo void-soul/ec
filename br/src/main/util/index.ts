@@ -17,6 +17,9 @@ export const window = {
   },
   getAllJingWindows() {
     return JingWindow.getAllJingWindows();
+  },
+  getFocusedWindow() {
+    return JingWindow.getFocusedWindow();
   }
 };
 export const view = {
