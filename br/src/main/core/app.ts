@@ -1,15 +1,13 @@
 import {JingPlugin, ContextMenuParams} from 'plugin-line';
-import JingWindow from '@/main/core/window';
+import path from 'path';
+import fs from 'fs';
+import vm from 'vm';
+import * as util from '@/main/util';
+import {app} from 'electron';
 class JingApp {
   private plugins: JingPlugin[] = [];
-  constructor () {
-
-  }
-  windowContext(win: JingWindow, viewId?: number) {
-
-  }
-  viewContext(win: JingWindow, param: ContextMenuParams) {
-
+  async loadPlugin() {
+    const pluginPath = path.join(app.getPath('userData'), 'ec', 'plugin');
   }
 }
 export const jingApp = new JingApp();

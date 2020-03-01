@@ -1,13 +1,9 @@
 import {imageManager, devToolSwitch, getConfig, newViewOption, windowPreferences, windowUrl} from '@/main/util';
-import * as util from '@/main/util';
 import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/main/util/global';
 import {BrowserWindow, BrowserView, ContextMenuParams, webContents, app} from 'electron';
 import {JingPlugin, ViewOption, ViewQuery, ViewFound} from 'plugin-line';
 import JingView from '@/main/core/view';
-import path from 'path';
-import * as fs from 'fs';
-import vm from 'vm';
-import {jingApp} from './app';
+
 
 const JINGWIN_WINID: {[id: number]: JingWindow} = {};
 const JINGWIN_CONID: {[id: number]: JingWindow} = {};
@@ -72,6 +68,16 @@ export default class JingWindow {
 
   static getFocusedWindow() {
     return JINGWIN_WINID[ACTIVE_WINID];
+  }
+
+  /** 全局快捷菜单 */
+  static globalMenu() {
+
+  }
+
+  /** 右键菜单 */
+  contextMenu(viewId: number) {
+
   }
 
   open(url: string) {

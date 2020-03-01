@@ -40,5 +40,6 @@
   "beta": true,
   "login": false,
   "required": true,
-  "title": "view菜单"
+  "title": "view菜单",
+  "rule": "*"
 }

@@ -716,6 +716,8 @@ declare module 'plugin-line' {
     broadcast(channel: string, ...args: any[]): void;
     /** 获取视图列表 */
     getViews(): JingView[];
+    /** 右键菜单 */
+    contextMenu(viewId: number): void;
   }
 }
 declare global {
@@ -800,6 +802,8 @@ declare global {
     broadcast(channel: string, ...args: any[]): void;
     /** 获取视图列表 */
     getViews(): Promise<JingView[]>;
+    /** 打开右键菜单 */
+    contextMenu(viewId: number): void;
   }
   class NoticeEvent {
     on(channel: 'did-finish-load', listener: (viewid: number) => void): void;

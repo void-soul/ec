@@ -18,6 +18,7 @@ export const build = () => {
     login: info.login,
     keywords: info.keywords,
     homepage: info.homepage,
+    rule: info.rule,
     injectJs: new Array<string[]>(),
     injectCss: new Array<string[]>()
   };
