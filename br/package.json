@@ -81,7 +81,7 @@
     "eslint-plugin-standard": "4.0.1",
     "eslint-plugin-vue": "6.2.1",
     "node-abi": "2.15.0",
-    "plugin-line": "1.1.7",
+    "plugin-line": "1.1.8",
     "quasar": "1.9.6",
     "typescript": "3.8.3",
     "vue": "2.6.11",

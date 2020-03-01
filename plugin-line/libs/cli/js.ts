@@ -8,4 +8,4 @@ export const js = () => {
   }
   writeFile(`./src/inject/js/${ name }.ts`, `console.log('this is ${ name }')`);
   writeFile(`./src/inject/js/${ name }.rule`, '');
-}
+};

@@ -14,7 +14,7 @@ export default class SetEx<T> extends Set {
     this.replaceWhenExits = replaceWhenExits;
   }
 
-  add(value: T): this {
+  add (value: T): this {
     let flag = false;
     this.forEach((item) => {
       if (item[this.key] === value[this.key]) {
@@ -35,7 +35,7 @@ export default class SetEx<T> extends Set {
     return this;
   }
 
-  add2(value: T): T {
+  add2 (value: T): T {
     let flag = false;
     let tmp = value;
     this.forEach((item) => {
@@ -63,7 +63,7 @@ export default class SetEx<T> extends Set {
    * @param {*} value 这是对象的关键属性,而非对象
    * @returns {(T | null)}
    */
-  find(value: T[keyof T]): T | null {
+  find (value: T[keyof T]): T | null {
     for (const item of this) {
       if (item[this.key] === value) {
         return item;
@@ -77,7 +77,7 @@ export default class SetEx<T> extends Set {
    * @param {*} value 这是对象的关键属性,而非对象
    * @returns {T[]}
    */
-  findAll(value: T[keyof T]): T[] {
+  findAll (value: T[keyof T]): T[] {
     const res = new Array<T>();
     this.forEach((item) => {
       if (item[this.key] === value) {
@@ -93,7 +93,7 @@ export default class SetEx<T> extends Set {
    * @param {(item: T) => boolean} fn
    * @returns {T[]}
    */
-  filter(fn: (item: T) => boolean): T | null {
+  filter (fn: (item: T) => boolean): T | null {
     for (const item of this) {
       if (fn(item) === true) {
         return item;
@@ -108,7 +108,7 @@ export default class SetEx<T> extends Set {
    * @param {(item: T) => boolean} fn
    * @returns {T[]}
    */
-  filterAll(fn: (item: T) => boolean): T[] {
+  filterAll (fn: (item: T) => boolean): T[] {
     const res = new Array<T>();
     this.forEach((item) => {
       if (fn(item) === true) {
@@ -124,7 +124,7 @@ export default class SetEx<T> extends Set {
    * @param {*} value 这是对象的关键属性,而非对象
    * @returns {boolean}
    */
-  has(value: T[keyof T]): boolean {
+  has (value: T[keyof T]): boolean {
     for (const item of this) {
       if (item[this.key] === value) {
         return true;
@@ -133,7 +133,7 @@ export default class SetEx<T> extends Set {
     return false;
   }
 
-  toArray(): T[] {
+  toArray (): T[] {
     return Array.from(this);
   }
 
@@ -143,7 +143,7 @@ export default class SetEx<T> extends Set {
    * @param {*} value 这是对象的关键属性,而非对象
    * @returns {boolean}
    */
-  delete(value: T[keyof T]): boolean {
+  delete (value: T[keyof T]): boolean {
     for (const item of this) {
       if (item[this.key] === value) {
         super.delete(item);

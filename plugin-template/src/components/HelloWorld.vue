@@ -7,11 +7,11 @@
 <script lang="ts">
 export default {
   name: 'HelloWorld',
-  mounted() {
+  mounted () {
     console.log('ok!');
   },
   computed: {
-    defaultText() {
+    defaultText () {
       return 1;
     }
   }

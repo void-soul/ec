@@ -4,18 +4,18 @@ import path = require('path');
 export const fs_stat = function (filePath: string) {
   try {
     fs.statSync(filePath);
-    return true
+    return true;
   } catch (e) {
-    return false
+    return false;
   }
-}
+};
 
 export const writeFile = (filePath: string, data: string) => {
   const dir = path.dirname(filePath);
   if (fs_stat(dir) === false) {
-    let pathtmp: string = '';
+    let pathtmp = '';
     const pathes = dir.split('/');
-    for (let dirname of pathes) {
+    for (const dirname of pathes) {
       if (pathtmp) {
         pathtmp = path.join(pathtmp, dirname);
       } else {

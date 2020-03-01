@@ -1,5 +1,5 @@
-import {WebContents} from 'electron';
-import {getConfig} from '@/main/util/config';
+import { WebContents } from 'electron';
+import { getConfig } from '@/main/util/config';
 /**
  * 开发工具切换
  * @param webContents

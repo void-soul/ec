@@ -2,7 +2,7 @@ const _cache: {
   [key: string]: any;
 } = {};
 export class Cache {
-  cached(...keys: string[]): {
+  cached (...keys: string[]): {
     [key: string]: any;
   } {
     const result: {
@@ -14,13 +14,13 @@ export class Cache {
     return result;
   }
 
-  cacheRemove(...keys: string[]): void {
+  cacheRemove (...keys: string[]): void {
     for (const key of keys) {
       delete _cache[key];
     }
   }
 
-  cache(target: {
+  cache (target: {
     [key: string]: any;
   } | string, value?: any): void {
     if (typeof target === 'string') {
@@ -30,11 +30,11 @@ export class Cache {
     }
   }
 
-  cacheHave(key: string): boolean {
+  cacheHave (key: string): boolean {
     return _cache.hasOwnProperty(key);
   }
 
-  cacheClear(): void {
+  cacheClear (): void {
     const keys = Object.keys(_cache);
     for (const key of keys) {
       delete _cache[key];

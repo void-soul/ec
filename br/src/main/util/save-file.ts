@@ -1,4 +1,4 @@
-import {dialog, app} from 'electron';
+import { dialog, app } from 'electron';
 /**
  * 文件存储
  * @param name

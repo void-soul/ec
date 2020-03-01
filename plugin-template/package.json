@@ -25,7 +25,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.1.2",
-    "plugin-line": "1.1.7",
+    "plugin-line": "1.1.8",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "typescript": "~3.7.5",
@@ -40,6 +40,6 @@
   "beta": true,
   "login": false,
   "required": true,
-  "title": "view菜单",
-  "rule": "*"
+  "rule": "*",
+  "title": "view菜单"
 }

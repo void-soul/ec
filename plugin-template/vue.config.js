@@ -1,17 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 // 读取页面
-const pagesNames = fs.readdirSync('./src/page/');
 const pages = {};
-for (const page of pagesNames) {
-  if (page.includes('.')) {
-    continue;
+if (fs.existsSync('./src/page')) {
+  const pagesNames = fs.readdirSync('./src/page/');
+  for (const page of pagesNames) {
+    if (page.includes('.')) {
+      continue;
+    }
+    pages[page] = {
+      entry: `src/page/${ page }/index.js`,
+      emplate: 'public/index.html',
+      filename: `page/${ page }.html`
+    };
   }
-  pages[page] = {
-    entry: `src/page/${ page }/index.js`,
-    emplate: 'public/index.html',
-    filename: `page/${ page }.html`
-  };
 }
 const jsNames = ['.js', '.ts'];
 const cssNames = ['.css', '.styl'];

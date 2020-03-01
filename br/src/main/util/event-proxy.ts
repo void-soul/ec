@@ -1,5 +1,4 @@
-import {ipcMain, WebContents, BrowserWindow, BrowserView, FindInPageOptions} from 'electron';
-import {ViewOption} from 'plugin-line';
+import { ipcMain, WebContents, BrowserWindow, BrowserView } from 'electron';
 import JingWindow from '@/main/core/window';
 import JingView from '@/main/core/view';
 
@@ -13,23 +12,23 @@ class Proxy {
     ipcMain.on('on=jing=window', (event, id: number, methodName: string, ...args: any[]) => {
       const window = id ? JingWindow.fromId(id) : JingWindow.fromContentId(event.sender.id);
       if (window) {
-        window[`${ methodName }`](...args)
+        window[`${ methodName }`](...args);
       }
     }).handle('handel=jing=window', async (event, id: number, methodName: string, ...args: any[]) => {
       const window = id ? JingWindow.fromId(id) : JingWindow.fromContentId(event.sender.id);
       if (window) {
-        return await window[`${ methodName }`](...args)
+        return await window[`${ methodName }`](...args);
       }
     });
     ipcMain.on('on=jing=view', (event, id: number, methodName: string, ...args: any[]) => {
       const view = id ? JingView.fromId(id) : JingView.fromContentId(event.sender.id);
       if (view) {
-        view[`${ methodName }`](...args)
+        view[`${ methodName }`](...args);
       }
     }).handle('handel=jing=view', async (event, id: number, methodName: string, ...args: any[]) => {
       const view = id ? JingView.fromId(id) : JingView.fromContentId(event.sender.id);
       if (view) {
-        return await view[`${ methodName }`](...args)
+        return await view[`${ methodName }`](...args);
       }
     });
     ipcMain.on('get=id', (event) => {
@@ -45,7 +44,7 @@ class Proxy {
           return {
             window: view.windowId,
             view: view.id
-          }
+          };
         }
       }
       return {
@@ -55,7 +54,7 @@ class Proxy {
     });
   }
 
-  getWindow(webContent: WebContents, id: {window?: number; view?: number}) {
+  getWindow (webContent: WebContents, id: {window?: number; view?: number}) {
     const window = BrowserWindow.fromWebContents(webContent);
     if (window) {
       return {
@@ -78,7 +77,7 @@ class Proxy {
     };
   }
 
-  destroy() {
+  destroy () {
     JingWindow.getAllJingWindows().forEach(item => {
       item.destroy();
     });

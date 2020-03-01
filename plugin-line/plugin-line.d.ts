@@ -462,7 +462,7 @@ declare module 'plugin-line' {
     /** 根据指定的最小宽、长优化图片大小 */
     fixSize(filepath: string, local?: boolean): Promise<void>;
     /** 重新设置一个图大小 */
-    reSize(data: Buffer, {width, height}: {width?: number | undefined; height?: number | undefined;}): Promise<Buffer>
+    reSize(data: Buffer, {width, height}: {width?: number | undefined; height?: number | undefined}): Promise<Buffer>
   }
   /** 持久缓存定义 */
   class Store {
@@ -525,7 +525,7 @@ declare module 'plugin-line' {
   interface ViewFound {
     id: number;
     index: number;
-    view: JingView | null
+    view: JingView | null;
   }
   type ViewMode = 'CurrentWindowShow' | 'NewWindow' | 'CurrentWindowHide' | 'DialogFullHeight' | 'DialogFullWidth' | 'Dialog';
   type CloseMode = 'Enabled' | 'OnlyDev' | 'Forbid' | 'EnabledAndConfirm';

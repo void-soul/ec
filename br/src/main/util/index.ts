@@ -12,18 +12,18 @@ export * from '@/main/util/save-file';
 export * from '@/main/util/store';
 export * from '@/main/util/uri';
 export const window = {
-  fromId(id: number) {
+  fromId (id: number) {
     return JingWindow.fromId(id);
   },
-  getAllJingWindows() {
+  getAllJingWindows () {
     return JingWindow.getAllJingWindows();
   },
-  getFocusedWindow() {
+  getFocusedWindow () {
     return JingWindow.getFocusedWindow();
   }
 };
 export const view = {
-  fromId(id: number) {
+  fromId (id: number) {
     return JingView.fromId(id);
   }
 };

@@ -8,4 +8,4 @@ export const css = () => {
   }
   writeFile(`./src/inject/css/${ name }.styl`, `p {width: 100px;}`);
   writeFile(`./src/inject/css/${ name }.rule`, '');
-}
+};

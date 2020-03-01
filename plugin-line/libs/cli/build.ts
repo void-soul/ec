@@ -78,4 +78,4 @@ import { writeFile } from './util';
   }
   shell.exec('mkdir output');
   zip.writeZip(`./output/${ info.name }-${ info.version }.zip`);
-}
+};

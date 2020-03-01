@@ -1,4 +1,4 @@
-import {dialog} from 'electron';
+import { dialog } from 'electron';
 /**
  * 询问对话框
  * @param detail

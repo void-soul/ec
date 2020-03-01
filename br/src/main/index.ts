@@ -1,8 +1,8 @@
-import {app} from 'electron';
-import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
-import {homedir} from 'os';
+import { app } from 'electron';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
+import { homedir } from 'os';
 import JingWindow from '@/main/core/window';
-import {resolve} from 'path';
+import { resolve } from 'path';
 import '@/main/util/cache';
 app.setPath('userData', resolve(homedir(), 'ec'));
 // 禁用硬件加速
