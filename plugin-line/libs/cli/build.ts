@@ -62,6 +62,27 @@ export const build = () => {
       `).replace('export default class ', 'class MyPlugin ')
     }
       (util) => new MyPlugin(util);`);
+  // 删除多余的js文件:因为编译css而产生的js
+  // 读取注入样式
+  if (fs.existsSync('./src/inject/css')) {
+    const syncNames = fs.readdirSync('./src/inject/css');
+    for (const item of syncNames) {
+      const ext = path.extname(item);
+      const bname = path.basename(item, path.extname(item));
+      // 是css文件，同时存在规则约束文件
+      if (cssNames.includes(ext) && fs.existsSync(`src/inject/css/${ bname }.rule`)) {
+        fs.unlinkSync(`./dist/js/${ bname }.js`);
+      }
+    }
+  }
+  // 当页面数量=0时，删除index.html
+  if (!fs.existsSync('./src/page') || fs.readdirSync('./src/page').length === 0) {
+    fs.unlinkSync('./dist/index.html');
+    // 当js、css为空时，删除main.js
+    if (outInfo.injectCss.length === 0 && outInfo.injectJs.length === 0) {
+      fs.unlinkSync('./dist/js/main.js');
+    }
+  }
   shell.rm('-rf', './output/');
   const inners = fs.readdirSync('./dist');
   const zip = new Adm();
