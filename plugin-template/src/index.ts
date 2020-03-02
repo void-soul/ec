@@ -1,23 +1,25 @@
-import { JingPlugin, ContextMenuParams, ContextMenu, JingWindow, JingUtil } from 'plugin-line';
+import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow} from 'plugin-line';
 export default class extends JingPlugin {
-  constructor (win: JingWindow, util: JingUtil) {
-    super(win, util);
-    console.log(win, util);
+  onNewWindow(win: JingWindow): void {
+    console.log('onNewWindow', win);
   }
 
-  destroy () {
-    throw new Error('Method not implemented.');
+  shotMenu(): ContextMenu[] {
+    console.log('shotMenu');
+    return [];
   }
 
-  windowMenu (_viewId?: number | undefined): ContextMenu[] {
-    throw new Error('Method not implemented.');
+  windowContext(win: JingWindow, viewId?: number | undefined): ContextMenu[] {
+    console.log('windowContext', win, viewId);
+    return [];
   }
 
-  viewMenu (_param: ContextMenuParams): ContextMenu[] {
-    throw new Error('Method not implemented.');
+  viewContext(win: JingWindow, param: ContextMenuParams): ContextMenu[] {
+    console.log('viewContext', win, param);
+    return [];
   }
 
-  onContextClick (_param: ContextMenuParams, _menuId: string): void {
-    throw new Error('Method not implemented.');
+  destroy(): void {
+    console.log('destory');
   }
 };

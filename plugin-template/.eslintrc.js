@@ -32,6 +32,8 @@ module.exports = {
     'no-this-assignment': 'off',
     'no-prototype-builtins': 'off',
     'no-return-await': 'off',
-    'no-fallthrough': 'off'
+    'no-fallthrough': 'off',
+    'object-curly-spacing': 'off',
+    'space-before-function-paren': 'off'
   }
 };

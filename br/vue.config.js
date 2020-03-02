@@ -64,7 +64,7 @@ module.exports = {
         return config;
       },
       customFileProtocol: 'jing://./',
-      externals: ['sqlite3', 'bufferutil', 'utf-8-validate', 'sharp', 'better-sqlite3'],
+      externals: ['sqlite3', 'sharp', 'better-sqlite3'],
       mainProcessFile: 'src/main/index.ts',
       mainProcessWatch: ['src/main/**/*', 'src/main/index.ts', 'src/preload/**/*'],
       mainProcessArgs: ['--experimental-worker'],

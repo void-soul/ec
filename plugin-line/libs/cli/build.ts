@@ -54,16 +54,14 @@ export const build = () => {
   const index = fs.readFileSync('./dist/js/index.js', {encoding: 'utf-8'}).toString();
   writeFile('./dist/js/index.js', `${
     index.replace("import { JingPlugin } from 'plugin-line';", `
-import { writeFile } from './util';
       class JingPlugin {
-        constructor(win, util) {
-            this.win = win;
+        constructor(util) {
             this.util = util;
         }
       };
       `).replace('export default class ', 'class MyPlugin ')
     }
-      (win, util) => new MyPlugin(win, util);`);
+      (util) => new MyPlugin(util);`);
   shell.rm('-rf', './output/');
   const inners = fs.readdirSync('./dist');
   const zip = new Adm();
