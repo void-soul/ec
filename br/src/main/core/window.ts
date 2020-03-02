@@ -3,6 +3,7 @@ import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/main/util/global';
 import {BrowserWindow, BrowserView, ContextMenuParams, webContents} from 'electron';
 import {ViewOption, ViewQuery, ViewFound} from 'plugin-line';
 import JingView from '@/main/core/view';
+import {jingApp} from './app';
 
 const JINGWIN_WINID: {[id: number]: JingWindow} = {};
 const JINGWIN_CONID: {[id: number]: JingWindow} = {};
@@ -12,7 +13,7 @@ export default class JingWindow {
   id: number;
   webContentId: number;
   views: JingView[] = [];
-  private activeId = 0;
+  activeId = 0;
   constructor () {
     // 初始化窗体
     const window = new BrowserWindow({
@@ -70,8 +71,8 @@ export default class JingWindow {
   }
 
   /** 右键菜单 */
-  contextMenu(_viewId: number) {
-
+  contextMenu(viewId: number) {
+    jingApp.windowContext(this, JingView.fromId(viewId));
   }
 
   open(url: string) {

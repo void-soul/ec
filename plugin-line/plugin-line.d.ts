@@ -566,9 +566,93 @@ declare module 'plugin-line' {
   type ViewNetState = 'none' | 'finish' | 'loading' | 'failed' | 'cancel';
   /** 右键菜单声明 */
   interface ContextMenu {
-    readonly label: string;
-    readonly id: string;
-    readonly accelerator?: string;
+    click?: (browserWindow: JingWindow) => void;
+    /**
+     * Can be `undo`, `redo`, `cut`, `copy`, `paste`, `pasteAndMatchStyle`, `delete`,
+     * `selectAll`, `reload`, `forceReload`, `toggleDevTools`, `resetZoom`, `zoomIn`,
+     * `zoomOut`, `togglefullscreen`, `window`, `minimize`, `close`, `help`, `about`,
+     * `services`, `hide`, `hideOthers`, `unhide`, `quit`, `startSpeaking`,
+     * `stopSpeaking`, `close`, `minimize`, `zoom`, `front`, `appMenu`, `fileMenu`,
+     * `editMenu`, `viewMenu`, `recentDocuments`, `toggleTabBar`, `selectNextTab`,
+     * `selectPreviousTab`, `mergeAllWindows`, `clearRecentDocuments`,
+     * `moveTabToNewWindow` or `windowMenu` - Define the action of the menu item, when
+     * specified the `click` property will be ignored. See roles.
+     */
+    role?: ('undo' | 'redo' | 'cut' | 'copy' | 'paste' | 'pasteAndMatchStyle' | 'delete' | 'selectAll' | 'reload' | 'forceReload' | 'toggleDevTools' | 'resetZoom' | 'zoomIn' | 'zoomOut' | 'togglefullscreen' | 'window' | 'minimize' | 'close' | 'help' | 'about' | 'services' | 'hide' | 'hideOthers' | 'unhide' | 'quit' | 'startSpeaking' | 'stopSpeaking' | 'close' | 'minimize' | 'zoom' | 'front' | 'appMenu' | 'fileMenu' | 'editMenu' | 'viewMenu' | 'recentDocuments' | 'toggleTabBar' | 'selectNextTab' | 'selectPreviousTab' | 'mergeAllWindows' | 'clearRecentDocuments' | 'moveTabToNewWindow' | 'windowMenu');
+    /**
+     * Can be `normal`, `separator`, `submenu`, `checkbox` or `radio`.
+     */
+    type?: ('normal' | 'separator' | 'submenu' | 'checkbox' | 'radio');
+    label?: string;
+    sublabel?: string;
+    /**
+     * Hover text for this menu item.
+     *
+     * @platform darwin
+     */
+    toolTip?: string;
+    accelerator?: string;
+    /**
+     * If false, the menu item will be greyed out and unclickable.
+     */
+    enabled?: boolean;
+    /**
+     * default is `true`, and when `false` will prevent the accelerator from triggering
+     * the item if the item is not visible`.
+     *
+     * @platform darwin
+     */
+    acceleratorWorksWhenHidden?: boolean;
+    /**
+     * If false, the menu item will be entirely hidden.
+     */
+    visible?: boolean;
+    /**
+     * Should only be specified for `checkbox` or `radio` type menu items.
+     */
+    checked?: boolean;
+    /**
+     * If false, the accelerator won't be registered with the system, but it will still
+     * be displayed. Defaults to true.
+     *
+     * @platform linux,win32
+     */
+    registerAccelerator?: boolean;
+    /**
+     * Should be specified for `submenu` type menu items. If `submenu` is specified,
+     * the `type: 'submenu'` can be omitted. If the value is not a `Menu` then it will
+     * be automatically converted to one using `Menu.buildFromTemplate`.
+     */
+    submenu?: ContextMenu[];
+    /**
+     * Unique within a single menu. If defined then it can be used as a reference to
+     * this item by the position attribute.
+     */
+    id?: string;
+    /**
+     * Inserts this item before the item with the specified label. If the referenced
+     * item doesn't exist the item will be inserted at the end of  the menu. Also
+     * implies that the menu item in question should be placed in the same “group” as
+     * the item.
+     */
+    before?: string[];
+    /**
+     * Inserts this item after the item with the specified label. If the referenced
+     * item doesn't exist the item will be inserted at the end of the menu.
+     */
+    after?: string[];
+    /**
+     * Provides a means for a single context menu to declare the placement of their
+     * containing group before the containing group of the item with the specified
+     * label.
+     */
+    beforeGroupContaining?: string[];
+    /**
+     * Provides a means for a single context menu to declare the placement of their
+     * containing group after the containing group of the item with the specified
+     * label.
+     */
+    afterGroupContaining?: string[];
   }
   /** 插件接口定义 */
   abstract class JingPlugin {
@@ -580,10 +664,10 @@ declare module 'plugin-line' {
     abstract onNewWindow(win: JingWindow): void;
     /** 注册全局快捷键时调用 */
     abstract shotMenu(): ContextMenu[];
-    /** 在window上右键点击、window的全局菜单时，本插件追加的右键菜单,此菜单只会在窗口初始化时、view变化调用 */
-    abstract windowContext(win: JingWindow, viewId?: number): ContextMenu[];
+    /** 在window上右键点击、window的全局菜单时，本插件追加的右键菜单,view是指展示在window上的代表view的选项卡 */
+    abstract windowContext(win: JingWindow, view: JingView): ContextMenu[];
     /** 在view上右键点击时，本插件追加的右键菜单 */
-    abstract viewContext(win: JingWindow, param: ContextMenuParams): ContextMenu[];
+    abstract viewContext(win: JingWindow, view: JingView, param: ContextMenuParams): ContextMenu[];
     /** 插件的注销方法 */
     abstract destroy(): void;
   }
@@ -718,6 +802,22 @@ declare module 'plugin-line' {
     getViews(): JingView[];
     /** 右键菜单 */
     contextMenu(viewId: number): void;
+  }
+  /** 插件文件清单 */
+  interface PluginManifest {
+    name: string;
+    title?: string;
+    icon?: string;
+    version: string;
+    description?: string;
+    required?: boolean;
+    beta?: boolean;
+    login?: boolean;
+    keywords?: string;
+    homepage?: string;
+    rule?: string;
+    injectJs: string[][];
+    injectCss: string[][];
   }
 }
 declare global {

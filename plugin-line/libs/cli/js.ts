@@ -1,6 +1,6 @@
 import {writeFile} from './util';
 import * as fs from 'fs';
-
+import shell = require('shelljs');
 export const js = () => {
   const name = process.argv[3];
   if (!name) {
@@ -13,4 +13,5 @@ export const js = () => {
   }
   writeFile(`./src/inject/js/${ name }.ts`, `console.log('this is ${ name }')`);
   writeFile(`./src/inject/js/${ name }.rule`, '');
+  shell.exec('yarn lint --fix');
 };

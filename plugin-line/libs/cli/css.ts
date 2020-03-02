@@ -1,5 +1,5 @@
 import {writeFile} from './util';
-
+import shell = require('shelljs');
 export const css = () => {
   const name = process.argv[3];
   if (!name) {
@@ -8,4 +8,5 @@ export const css = () => {
   }
   writeFile(`./src/inject/css/${ name }.styl`, `p {width: 100px;}`);
   writeFile(`./src/inject/css/${ name }.rule`, '');
+  shell.exec('yarn lint --fix');
 };

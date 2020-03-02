@@ -6395,10 +6395,10 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-plugin-line@1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.1.11.tgz#f4e7603ff4a4ea1324a7db0a493a57c9144801e9"
-  integrity sha512-VXyBVioXyVRFGdXIjgW/NiCxmBg7HbgfQdHSvt6ohq+JoakvjsULGwpPpSqtSa3yxB30CwLV7y4sPXqPWWkDHw==
+plugin-line@1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/plugin-line/-/plugin-line-1.1.12.tgz#10c16ea077e640a9a15e15cecc210ee2fc04b636"
+  integrity sha512-d/3QtK5YJCPFiTuohQbF3loCfE9Iha6eFA1kzeVa/l53gsfBpjSYYvbOXDIMGnB/vRbO8Y0Ofe4BYUgBnXilzQ==
   dependencies:
     adm-zip "0.4.14"
     shelljs "0.8.3"

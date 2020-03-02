@@ -1,5 +1,6 @@
 
 import {writeFile} from './util';
+import shell = require('shelljs');
 export const page = () => {
   const name = process.argv[3];
   if (!name) {
@@ -123,4 +124,5 @@ new Vue({
 });
 `);
   }
+  shell.exec('yarn lint --fix');
 };

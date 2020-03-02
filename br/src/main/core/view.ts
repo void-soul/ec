@@ -1,9 +1,10 @@
-import { imageManager, devToolSwitch, uriParse, buildWebPreferences, confirm } from '@/main/util';
-import { ContextMenuParams, Event, BrowserView, LoadURLOptions, webContents, InsertCSSOptions, WebSource, FindInPageOptions, WebContentsPrintOptions } from 'electron';
+import {imageManager, devToolSwitch, uriParse, buildWebPreferences, confirm} from '@/main/util';
+import {ContextMenuParams, Event, BrowserView, LoadURLOptions, webContents, InsertCSSOptions, WebSource, FindInPageOptions, WebContentsPrintOptions} from 'electron';
 import log from 'electron-log';
-import { UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint } from 'plugin-line';
-import { DEF_TITLE, DEF_VIEW_POINT } from '@/main/util/global';
+import {UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint} from 'plugin-line';
+import {DEF_TITLE, DEF_VIEW_POINT} from '@/main/util/global';
 import JingWindow from './window';
+import {jingApp} from './app';
 const JINGVIEW_VIEID: {[id: number]: JingView} = {};
 const JINGVIEW_CONID: {[id: number]: JingView} = {};
 
@@ -45,13 +46,13 @@ export default class JingView {
       case 'CurrentWindowShow':
       case 'CurrentWindowHide':
       case 'NewWindow':
-        view.setAutoResize({ height: true, width: true });
+        view.setAutoResize({height: true, width: true});
         break;
       case 'DialogFullHeight':
-        view.setAutoResize({ height: true });
+        view.setAutoResize({height: true});
         break;
       case 'DialogFullWidth':
-        view.setAutoResize({ width: true });
+        view.setAutoResize({width: true});
         break;
     }
 
@@ -90,7 +91,8 @@ export default class JingView {
         }
       })
       .on('dom-ready', () => {
-        // TODO: 注入脚本
+        // TODO: 注入脚本、样式
+        jingApp.inject(view.webContents);
       })
       .on('page-title-updated', (_event: Event, title, explicitSet) => {
         if (this.titleMode === 'Follow') {
@@ -164,6 +166,7 @@ export default class JingView {
       // 'cursor-changed'
       .on('context-menu', (_event: Event, params: ContextMenuParams) => {
         // TODO 右键菜单
+        jingApp.viewContext(JingWindow.fromId(this.windowId), JingView.fromId(this.id), params);
       })
       // 'select-bluetooth-device'
       // 'paint'
@@ -185,15 +188,15 @@ export default class JingView {
     // 'remote-get-guest-web-contents'
   }
 
-  static fromId (id: number) {
+  static fromId(id: number) {
     return JINGVIEW_VIEID[id];
   }
 
-  static fromContentId (id: number) {
+  static fromContentId(id: number) {
     return JINGVIEW_CONID[id];
   }
 
-  async loadURL (url?: string, options?: LoadURLOptions) {
+  async loadURL(url?: string, options?: LoadURLOptions) {
     if (this.loaded === true && this.closeMode === 'EnabledAndConfirm' && await confirm('所有未保存的数据都将丢失', `您确认要刷新${ this.title }吗`, '刷新提醒') === false) {
       return;
     }
@@ -208,115 +211,115 @@ export default class JingView {
     this.loaded = true;
   }
 
-  stop () {
+  stop() {
     webContents.fromId(this.webContentId).stop();
   }
 
-  clearHistory () {
+  clearHistory() {
     webContents.fromId(this.webContentId).clearHistory();
   }
 
-  goBack () {
+  goBack() {
     webContents.fromId(this.webContentId).goBack();
   }
 
-  goForward () {
+  goForward() {
     webContents.fromId(this.webContentId).goForward();
   }
 
-  goToIndex (index: number) {
+  goToIndex(index: number) {
     webContents.fromId(this.webContentId).goToIndex(index);
   }
 
-  goToOffset (offset: number) {
+  goToOffset(offset: number) {
     webContents.fromId(this.webContentId).goToOffset(offset);
   }
 
-  async insertCSS (css: string, options?: InsertCSSOptions) {
+  async insertCSS(css: string, options?: InsertCSSOptions) {
     return await webContents.fromId(this.webContentId).insertCSS(css, options);
   }
 
-  async removeInsertedCSS (key: string) {
+  async removeInsertedCSS(key: string) {
     await webContents.fromId(this.webContentId).removeInsertedCSS(key);
   }
 
-  async executeJavaScript (code: string, userGesture?: boolean) {
+  async executeJavaScript(code: string, userGesture?: boolean) {
     return await webContents.fromId(this.webContentId).executeJavaScript(code, userGesture);
   }
 
-  async executeJavaScriptInIsolatedWorld (worldId: number, scripts: WebSource[], userGesture?: boolean) {
+  async executeJavaScriptInIsolatedWorld(worldId: number, scripts: WebSource[], userGesture?: boolean) {
     return await webContents.fromId(this.webContentId).executeJavaScriptInIsolatedWorld(worldId, scripts, userGesture);
   }
 
-  undo () {
+  undo() {
     webContents.fromId(this.webContentId).undo();
   }
 
-  redo () {
+  redo() {
     webContents.fromId(this.webContentId).redo();
   }
 
-  cut () {
+  cut() {
     webContents.fromId(this.webContentId).cut();
   }
 
-  copy () {
+  copy() {
     webContents.fromId(this.webContentId).copy();
   }
 
-  copyImageAt (x: number, y: number) {
+  copyImageAt(x: number, y: number) {
     webContents.fromId(this.webContentId).copyImageAt(x, y);
   }
 
-  paste () {
+  paste() {
     webContents.fromId(this.webContentId).paste();
   }
 
-  pasteAndMatchStyle () {
+  pasteAndMatchStyle() {
     webContents.fromId(this.webContentId).pasteAndMatchStyle();
   }
 
-  delete () {
+  delete() {
     webContents.fromId(this.webContentId).delete();
   }
 
-  selectAll () {
+  selectAll() {
     webContents.fromId(this.webContentId).selectAll();
   }
 
-  unselect () {
+  unselect() {
     webContents.fromId(this.webContentId).unselect();
   }
 
-  replace (text: string) {
+  replace(text: string) {
     webContents.fromId(this.webContentId).replace(text);
   }
 
-  replaceMisspelling (text: string) {
+  replaceMisspelling(text: string) {
     webContents.fromId(this.webContentId).replaceMisspelling(text);
   }
 
-  async insertText (text: string) {
+  async insertText(text: string) {
     await webContents.fromId(this.webContentId).insertText(text);
   }
 
-  findInPage (text: string, options?: FindInPageOptions) {
+  findInPage(text: string, options?: FindInPageOptions) {
     webContents.fromId(this.webContentId).findInPage(text, options);
   }
 
-  stopFindInPage (action: 'clearSelection' | 'keepSelection' | 'activateSelection' = 'clearSelection') {
+  stopFindInPage(action: 'clearSelection' | 'keepSelection' | 'activateSelection' = 'clearSelection') {
     webContents.fromId(this.webContentId).stopFindInPage(action);
   }
 
-  send (channel: string, ...args: any) {
+  send(channel: string, ...args: any) {
     webContents.fromId(this.webContentId).send(channel, ...args);
   }
 
-  print (options?: WebContentsPrintOptions, callback?: (success: boolean, failureReason: 'cancelled' | 'failed') => void) {
+  print(options?: WebContentsPrintOptions, callback?: (success: boolean, failureReason: 'cancelled' | 'failed') => void) {
     webContents.fromId(this.webContentId).print(options, callback);
   }
 
-  async destroy (ask = false) {
+  async destroy(ask = false) {
     const view = BrowserView.fromId(this.id);
     if (view && view.isDestroyed() === false) {
       if (ask === true && this.closeMode === 'EnabledAndConfirm' && await confirm('所有未保存的数据都将丢失', `您确认要关闭${ this.title }吗`, '刷新提醒') === false) {
@@ -328,7 +331,7 @@ export default class JingView {
     }
   }
 
-  dev () {
+  dev() {
     devToolSwitch(webContents.fromId(this.webContentId));
   }
 }
