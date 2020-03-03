@@ -1,7 +1,7 @@
 import fs from 'fs';
-import log from 'electron-log';
 import path from 'path';
-import { app } from 'electron';
+import {app} from 'electron';
+import log from 'electron-log';
 /**
  * 读取配置文件
  * 配置文件来源

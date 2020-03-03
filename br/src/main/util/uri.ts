@@ -2,8 +2,8 @@
  * 地址管理
  * 包含：可信任的地址列表
  */
-import { UrlWithStringQuery, URL } from 'url';
-import { UrlInfo } from 'plugin-line';
+import {UrlWithStringQuery, URL} from 'url';
+import {UrlInfo} from 'plugin-line';
 
 const trustHostName = [
   'erp.jingrise.com',
@@ -11,8 +11,10 @@ const trustHostName = [
   'localhost',
   '10.0.0.200'
 ];
-const hostNameMethods = {
-  'amazon.com' (item: UrlWithStringQuery) {
+const hostNameMethods: {
+  [key: string]: (iute: URL) => string | undefined
+} = {
+  'amazon.com'(item: URL) {
     if (item.pathname && item.pathname.includes('/dp/')) {
       return 'item.amazon.com';
     } else {
@@ -55,5 +57,5 @@ export const uriParse = (urlStr: string): UrlInfo => {
     ...data,
     host,
     hostname
-  };
+  } as UrlInfo;
 };

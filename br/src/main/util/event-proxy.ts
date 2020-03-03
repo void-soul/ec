@@ -1,4 +1,4 @@
-import { ipcMain, WebContents, BrowserWindow, BrowserView } from 'electron';
+import {ipcMain, WebContents, BrowserWindow, BrowserView} from 'electron';
 import JingWindow from '@/main/core/window';
 import JingView from '@/main/core/view';
 
@@ -7,7 +7,7 @@ import JingView from '@/main/core/view';
  * @class Proxy
  * @extends {EventEmitter}
  */
-class Proxy {
+export class EventProxy {
   constructor () {
     ipcMain.on('on=jing=window', (event, id: number, methodName: string, ...args: any[]) => {
       const window = id ? JingWindow.fromId(id) : JingWindow.fromContentId(event.sender.id);
@@ -34,53 +34,30 @@ class Proxy {
     ipcMain.on('get=id', (event) => {
       const window = JingWindow.fromContentId(event.sender.id);
       if (window) {
-        return {
-          view: 0,
-          window: window.id
+        event.returnValue = {
+          viewid: undefined,
+          windowid: window.id
         };
       } else {
         const view = JingView.fromContentId(event.sender.id);
         if (view) {
-          return {
-            window: view.windowId,
-            view: view.id
+          event.returnValue = {
+            windowid: view.windowId,
+            viewid: view.id
+          };
+        } else {
+          event.returnValue = {
+            viewid: undefined,
+            windowid: undefined
           };
         }
       }
-      return {
-        view: 0,
-        window: 0
-      };
     });
   }
 
-  getWindow (webContent: WebContents, id: {window?: number; view?: number}) {
-    const window = BrowserWindow.fromWebContents(webContent);
-    if (window) {
-      return {
-        window: id.window ? JingWindow.fromId(window.id) : JingWindow.fromId(window.id),
-        view: id.view ? JingView.fromId(id.view) : null
-      };
-    } else {
-      const view = BrowserView.fromWebContents(webContent);
-      if (view) {
-        const jingView = JingView.fromId(view.id);
-        return {
-          window: id.window ? JingWindow.fromId(id.window) : JingWindow.fromId(jingView.windowId),
-          view: id.view ? JingView.fromId(id.view) : jingView
-        };
-      }
-    }
-    return {
-      window: null,
-      view: null
-    };
-  }
-
-  destroy () {
+  destroy() {
     JingWindow.getAllJingWindows().forEach(item => {
       item.destroy();
     });
   }
 }
-export const EventProxy = new Proxy();

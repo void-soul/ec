@@ -1,9 +1,10 @@
-import { ipcRenderer } from 'electron';
-const { windowid, viewid } = ipcRenderer.sendSync('get-id');
+import {ipcRenderer} from 'electron';
+const {windowid, viewid} = ipcRenderer.sendSync('get=id');
+console.log(windowid, viewid);
 window.brage = {
   windowid,
   viewid,
-  getWindow (_windowid?: number) {
+  getWindow(_windowid?: number) {
     _windowid = _windowid || 0;
     return {
       destroy: () => ipcRenderer.send('on=jing=window', _windowid, 'destroy'),
@@ -15,10 +16,11 @@ window.brage = {
       sort: (id, toIndex) => ipcRenderer.send('on=jing=window', _windowid, 'sort', id, toIndex),
       notice: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'notice', channel, ...args),
       broadcast: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'broadcast', channel, ...args),
-      getViews: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getViews')
+      getViews: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getViews'),
+      contextMenu: (viewId: number) => ipcRenderer.invoke('handel=jing=window', _windowid, 'contextMenu', viewId)
     };
   },
-  getView (_viewid?: number) {
+  getView(_viewid?: number) {
     _viewid = _viewid || 0;
     return {
       loadURL: (url?, options?) => ipcRenderer.send('on=jing=view', _viewid, 'loadURL', url, options),

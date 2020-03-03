@@ -58,7 +58,7 @@ module.exports = {
         };
         config.plugin('define').use(require('webpack/lib/DefinePlugin'), [resolveClientEnv()]);
         config
-          .entry('preload/index')
+          .entry('preload')
           .add('./src/enhance/preload.ts')
           .end();
         return config;
@@ -66,8 +66,8 @@ module.exports = {
       customFileProtocol: 'jing://./',
       externals: ['sqlite3', 'sharp', 'better-sqlite3'],
       mainProcessFile: 'src/main/index.ts',
-      mainProcessWatch: ['src/main/**/*', 'src/main/index.ts', 'src/preload/**/*'],
-      mainProcessArgs: ['--experimental-worker'],
+      mainProcessWatch: ['src/main/**/*', 'src/main/index.ts'],
+      // mainProcessArgs: ['--experimental-worker'],
       builderOptions: {
         appId: 'org.jingrise.erp',
         productName: 'ec',

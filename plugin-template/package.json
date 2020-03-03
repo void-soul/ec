@@ -25,7 +25,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.1.2",
-    "plugin-line": "1.1.12",
+    "plugin-line": "1.1.13",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "typescript": "~3.7.5",
@@ -38,6 +38,7 @@
     "vuex": "^3.1.2"
   },
   "beta": true,
+  "id": "9a0aed61-496b-4f90-b5b9-6bc9f03e8499",
   "login": false,
   "required": true,
   "rule": "*",

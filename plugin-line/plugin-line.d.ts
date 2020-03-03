@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import {Url} from 'url';
+import {URL} from 'url';
 import * as http from 'http';
 declare module 'plugin-line';
 declare module 'plugin-line' {
@@ -412,7 +412,7 @@ declare module 'plugin-line' {
     selectionArea: Rectangle;
     finalUpdate: boolean;
   }
-  interface UrlInfo extends Url {
+  interface UrlInfo extends URL {
     /** 调整、解析后的完整地址 */
     fullUrl: string;
     /** 初始地址 */
@@ -816,6 +816,7 @@ declare module 'plugin-line' {
     keywords?: string;
     homepage?: string;
     rule?: string;
+    id: string;
     injectJs: string[][];
     injectCss: string[][];
   }

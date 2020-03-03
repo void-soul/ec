@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 
-function isNum (a: any): boolean {
+function isNum(a: any): boolean {
   return a !== '' && a !== null && !isNaN(a);
 }
 export const num = (val: any, def = 0): number => {
@@ -9,7 +9,7 @@ export const num = (val: any, def = 0): number => {
   }
   return +val;
 };
-function filterNumber (array: any[]): number[] {
+function filterNumber(array: any[]): number[] {
   const res: number[] = [];
   array.forEach((element) => {
     if (isNum(element)) {
@@ -18,7 +18,7 @@ function filterNumber (array: any[]): number[] {
   });
   return res;
 }
-function filterNumber2 (array: any[]): Decimal[] {
+function filterNumber2(array: any[]): Decimal[] {
   const res: Decimal[] = [];
   array.forEach((element) => {
     if (isNum(element)) {
@@ -112,60 +112,60 @@ export const money = (
 
 export class Bus {
   private result: number;
-  constructor (result) {
+  constructor (result: any) {
     this.result = num(result);
   }
 
-  add (...args: any[]): this {
+  add(...args: any[]): this {
     this.result = add(this.result, ...args);
     return this;
   }
 
-  sub (...args: any[]): this {
+  sub(...args: any[]): this {
     this.result = sub(this.result, ...args);
     return this;
   }
 
-  div (...args: any[]): this {
+  div(...args: any[]): this {
     this.result = div(this.result, ...args);
     return this;
   }
 
-  mul (...args: any[]): this {
+  mul(...args: any[]): this {
     this.result = mul(this.result, ...args);
     return this;
   }
 
-  max (...args: any[]): this {
+  max(...args: any[]): this {
     this.result = max(this.result, ...args);
     return this;
   }
 
-  min (...args: any[]): this {
+  min(...args: any[]): this {
     this.result = min(this.result, ...args);
     return this;
   }
 
-  ac (): this {
+  ac(): this {
     this.result = sub(0, this.result);
     return this;
   }
 
-  abs (): this {
+  abs(): this {
     this.result = Math.abs(this.result);
     return this;
   }
 
-  round (numDigits: number, upOrDown?: number): this {
+  round(numDigits: number, upOrDown?: number): this {
     this.result = round(this.result, numDigits, upOrDown);
     return this;
   }
 
-  over (): number {
+  over(): number {
     return this.result;
   }
 
-  money (
+  money(
     style?: MoneyStyle,
     currency?: string,
     prefix?: number,

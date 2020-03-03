@@ -20,7 +20,8 @@ export const build = () => {
     homepage: info.homepage,
     rule: info.rule,
     injectJs: new Array<string[]>(),
-    injectCss: new Array<string[]>()
+    injectCss: new Array<string[]>(),
+    id: info.id
   };
   const jsNames = ['.js', '.ts'];
   const cssNames = ['.css', '.styl'];

@@ -1,13 +1,13 @@
 import * as http from 'http';
 import * as https from 'https';
-import { URL } from 'url';
+import {URL} from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from 'axios';
-import { saveFileDialog } from '@/main/util/save-file';
-import { app } from 'electron';
+import {saveFileDialog} from '@/main/util/save-file';
+import {app} from 'electron';
 import log from 'electron-log';
-import { HttpData } from 'plugin-line';
+import {HttpData} from 'plugin-line';
 
 /**
  *
@@ -23,7 +23,7 @@ class FileManager {
    * @returns {Promise<string>}
    * @memberof FileManager
    */
-  downLoadConfirmPath (url: string): Promise<string> {
+  downLoadConfirmPath(url: string): Promise<string> {
     return new Promise((resolve) => {
       const reader = this.readUrl(url);
       if (reader) {
@@ -41,7 +41,7 @@ class FileManager {
    * @returns {Promise<string>}
    * @memberof FileManager
    */
-  async downdLoad2Tmp (url: string): Promise<string> {
+  async downdLoad2Tmp(url: string): Promise<string> {
     const reader = this.readUrl(url);
     if (reader) {
       return await this.download2Path(url, `${ app.getPath('temp') }${ path.sep }${ reader.name }`);
@@ -56,7 +56,7 @@ class FileManager {
    * @param {string} url
    * @memberof FileManager
    */
-  async removeTmp (url: string) {
+  async removeTmp(url: string) {
     const reader = this.readUrl(url);
     if (reader) {
       try {
@@ -74,10 +74,10 @@ class FileManager {
    * @returns
    * @memberof FileManager
    */
-  downLoad2Buffer (url: string) {
+  downLoad2Buffer(url: string) {
     return new Promise((resolve: (data: HttpData) => void, reject) => {
       const options = new URL(url);
-      let { request } = http;
+      let {request} = http;
       if (options.protocol === 'https:') {
         request = https.request;
       }
@@ -88,7 +88,7 @@ class FileManager {
           data += chunk;
         });
         res.on('end', () => {
-          const d: any = { ...res, data };
+          const d: any = {...res, data};
           resolve(d);
         });
       });
@@ -110,7 +110,7 @@ class FileManager {
    * @returns
    * @memberof FileManager
    */
-  private download2Path (url: string, filePath?: string): Promise<string> {
+  private download2Path(url: string, filePath?: string): Promise<string> {
     return new Promise((resolve) => {
       if (url) {
         const name = new URL(url).pathname;
@@ -119,7 +119,7 @@ class FileManager {
             return resolve('');
           }
           try {
-            axios({ method: 'get', url, responseType: 'stream' }).then((response) => {
+            axios({method: 'get', url, responseType: 'stream'}).then((response) => {
               response.data.once('end', () => {
                 resolve(filePath);
               });
@@ -143,7 +143,7 @@ class FileManager {
    * @returns
    * @memberof FileManager
    */
-  private readUrl (url: string) {
+  private readUrl(url: string) {
     if (url) {
       const name = new URL(url).pathname;
       if (name) {
