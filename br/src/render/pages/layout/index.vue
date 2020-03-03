@@ -169,14 +169,12 @@
 
 <script >
 import Sortable from 'sortablejs';
-import windowViews from '^/window-views';
 export default {
   data () {
     return {
       sortAble: null
     };
   },
-  mixins: [windowViews],
   created () {
     this.$nextTick(() => {
       const tabsBox = document.querySelector('.q-tabs__content');

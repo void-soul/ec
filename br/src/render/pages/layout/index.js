@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import '#/style';
-import '#/extend';
+import '^/styles/quasar.styl';
+import '@quasar/extras/material-icons/material-icons.css';
 import App from './index.vue';
 import Quasar, { QBtn, QInput, QToolbar, QTabs, QTab, QSpace, QSeparator } from 'quasar';
 Vue.use(Quasar, {

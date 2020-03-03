@@ -21,9 +21,7 @@ for (const page of pagesNames) {
 module.exports = {
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src/main'));
-    config.resolve.alias.set('~', resolve('src/render/components'));
-    config.resolve.alias.set('#', resolve('src/render/plugins'));
-    config.resolve.alias.set('^', resolve('src/render/mixins'));
+    config.resolve.alias.set('^', resolve('src/render'));
   },
   configureWebpack: {
     target: 'node',
