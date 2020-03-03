@@ -23,13 +23,13 @@ module.exports = {
     config.resolve.alias.set('@', resolve('src/main'));
     config.resolve.alias.set('^', resolve('src/render'));
   },
-  configureWebpack: {
-    target: 'node',
-    node: {
-      __dirname: false,
-      __filename: false
-    }
-  },
+  // configureWebpack: {
+  //   target: 'node',
+  //   node: {
+  //     __dirname: false,
+  //     __filename: false
+  //   }
+  // },
   transpileDependencies: [/[\\/]node_modules[\\/]quasar[\\/]/],
   publicPath: '',
   runtimeCompiler: true,

@@ -1,6 +1,5 @@
 import {ipcRenderer} from 'electron';
 const {windowid, viewid} = ipcRenderer.sendSync('get=id');
-console.log(windowid, viewid);
 window.brage = {
   windowid,
   viewid,
@@ -17,7 +16,8 @@ window.brage = {
       notice: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'notice', channel, ...args),
       broadcast: (channel, ...args) => ipcRenderer.send('on=jing=window', _windowid, 'broadcast', channel, ...args),
       getViews: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getViews'),
-      contextMenu: (viewId: number) => ipcRenderer.invoke('handel=jing=window', _windowid, 'contextMenu', viewId)
+      contextMenu: (viewId: number) => ipcRenderer.invoke('handel=jing=window', _windowid, 'contextMenu', viewId),
+      getIds: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getIds')
     };
   },
   getView(_viewid?: number) {

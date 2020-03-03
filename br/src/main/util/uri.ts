@@ -2,7 +2,7 @@
  * 地址管理
  * 包含：可信任的地址列表
  */
-import {UrlWithStringQuery, URL} from 'url';
+import {URL} from 'url';
 import {UrlInfo} from 'plugin-line';
 
 const trustHostName = [

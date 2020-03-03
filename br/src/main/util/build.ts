@@ -15,11 +15,12 @@ const preload = path.join(app.getAppPath(), 'preload.js');
  */
 export const buildWebPreferences = (uri: string) => {
   const url = uriParse(uri);
+  console.log(url);
   return {
     nodeIntegration: url.trustServer || url.buildIn,
     nodeIntegrationInWorker: false,
     nodeIntegrationInSubFrames: false,
-    enableRemoteModule: true,
+    enableRemoteModule: false,
 
     devTools: true,
     zoomFactor: 1,
@@ -36,7 +37,7 @@ export const buildWebPreferences = (uri: string) => {
     experimentalFeatures: true,
     scrollBounce: true,
 
-    defaultFontSize: 13,
+    defaultFontSize: 14,
     defaultFontFamily: {
       standard: 'Times New Roman',
       serif: 'Times New Roman',
@@ -45,7 +46,7 @@ export const buildWebPreferences = (uri: string) => {
       cursive: 'Script',
       fantasy: 'Impact'
     },
-    defaultMonospaceFontSize: 13,
+    defaultMonospaceFontSize: 14,
     backgroundThrottling: true,
     offscreen: false,
     minimumFontSize: 0,
@@ -56,7 +57,7 @@ export const buildWebPreferences = (uri: string) => {
     safeDialogsMessage: '这个界面弹出了很多确认框，是否禁止继续弹出?',
     navigateOnDragDrop: false,
 
-    contextIsolation: true,
+    contextIsolation: false,
     autoplayPolicy: 'user-gesture-required',
     preload
   } as WebPreferences;

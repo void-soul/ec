@@ -1,9 +1,9 @@
-import { imageManager, devToolSwitch, getConfig, newViewOption, windowPreferences, windowUrl } from '@/main/util';
-import { DEF_VIEW_POINT, TOOLBAR_HEIGHT } from '@/main/util/global';
-import { BrowserWindow, BrowserView, ContextMenuParams, webContents } from 'electron';
-import { ViewOption, ViewQuery, ViewFound } from 'plugin-line';
+import {imageManager, devToolSwitch, getConfig, newViewOption, windowPreferences, windowUrl} from '@/main/util';
+import {DEF_VIEW_POINT, TOOLBAR_HEIGHT} from '@/main/util/global';
+import {BrowserWindow, BrowserView, ContextMenuParams, webContents} from 'electron';
+import {ViewOption, ViewQuery, ViewFound} from 'plugin-line';
 import JingView from '@/main/core/view';
-import { jingApp } from './app';
+import {jingApp} from './app';
 
 const JINGWIN_WINID: {[id: number]: JingWindow} = {};
 const JINGWIN_CONID: {[id: number]: JingWindow} = {};
@@ -49,57 +49,51 @@ export default class JingWindow {
     window.loadURL(windowUrl.fullUrl);
   }
 
-  static fromId (id: number) {
+  static fromId(id: number) {
     return JINGWIN_WINID[id];
   }
 
-  static fromContentId (id: number) {
+  static fromContentId(id: number) {
     return JINGWIN_CONID[id];
   }
 
-  static getAllJingWindows () {
+  static getAllJingWindows() {
     return Object.values(JINGWIN_WINID);
   }
 
-  static getFocusedWindow () {
+  static getFocusedWindow() {
     return JINGWIN_WINID[ACTIVE_WINID];
   }
-
-  /** 全局快捷菜单 */
-  static globalMenu () {
-
-  }
-
   /** 右键菜单 */
-  contextMenu (viewId: number) {
+  contextMenu(viewId: number) {
     jingApp.windowContext(this, JingView.fromId(viewId));
   }
 
-  open (url: string) {
+  open(url: string) {
     this.add({
       ...newViewOption,
       url
     });
   }
 
-  add (viewOption: ViewOption) {
+  add(viewOption: ViewOption) {
     // 检查url是否重复
-    let { view } = this.find({
+    let {view} = this.find({
       url: viewOption.url
     });
     // 不重复则调用add
     if (!view) {
       view = new JingView(viewOption);
-      this.push({ view });
+      this.push({view});
     }
     view.loadURL();
     // 判断viewMode决定是否激活
     if (view.viewMode !== 'CurrentWindowHide') {
-      this.active({ view });
+      this.active({view});
     }
   }
 
-  push (query: ViewQuery) {
+  push(query: ViewQuery) {
     const jingView = query.view || JingView.fromId(query.id!);
     if (jingView) {
       jingView.windowId = this.id;
@@ -108,8 +102,8 @@ export default class JingWindow {
     }
   }
 
-  remove (query?: ViewQuery, close?: boolean) {
-    const { index, view } = this.find(query);
+  remove(query?: ViewQuery, close?: boolean) {
+    const {index, view} = this.find(query);
     const prev = this.find({
       ...query,
       prev: true
@@ -121,12 +115,12 @@ export default class JingWindow {
         view.destroy(true);
       }
       if (prev) {
-        this.active({ id: prev.id });
+        this.active({id: prev.id});
       }
     }
   }
 
-  destroy () {
+  destroy() {
     const window = BrowserWindow.fromId(this.id);
     if (window && window.isDestroyed() === false) {
       window.destroy();
@@ -139,8 +133,8 @@ export default class JingWindow {
     delete JINGWIN_CONID[this.webContentId];
   }
 
-  active (query?: ViewQuery) {
-    const { view } = this.find(query);
+  active(query?: ViewQuery) {
+    const {view} = this.find(query);
     if (view) {
       const window = BrowserWindow.fromId(this.id);
       const browserView = BrowserView.fromId(view.id);
@@ -166,21 +160,21 @@ export default class JingWindow {
     }
   }
 
-  sort (id: number, toIndex: number) {
-    const { index } = this.find({ id });
+  sort(id: number, toIndex: number) {
+    const {index} = this.find({id});
     this.views.splice(toIndex, 0, ...this.views.splice(index, 1));
   }
 
-  notice (channel: string, ...args: any[]) {
+  notice(channel: string, ...args: any[]) {
     for (const view of this.views) {
       if (view.isBuildIn) {
         webContents.fromId(view.webContentId).send(channel, ...args);
       }
-      webContents.fromId(this.webContentId).send(channel, ...args);
     }
+    webContents.fromId(this.webContentId).send(channel, ...args);
   }
 
-  broadcast (channel: string, ...args: any[]) {
+  broadcast(channel: string, ...args: any[]) {
     for (const view of this.views) {
       if (view.isBuildIn === false) {
         webContents.fromId(view.webContentId).send(channel, ...args);
@@ -188,10 +182,10 @@ export default class JingWindow {
     }
   }
 
-  find (query?: ViewQuery): ViewFound {
+  find(query?: ViewQuery): ViewFound {
     let index = -1;
     if (!query || (!query.id && !query.url && !query.view)) {
-      query = { id: this.activeId };
+      query = {id: this.activeId};
     }
     if (query.id) {
       index = this.views.findIndex((item) => item.id === query!.id);
@@ -221,12 +215,20 @@ export default class JingWindow {
     }
   }
 
-  getViews () {
+  getViews() {
     return this.views.filter(item => item.isBuildIn === false);
   }
 
+  getIds() {
+    return {
+      id: this.id,
+      webContentId: this.webContentId,
+      activeId: this.activeId
+    }
+  }
+
   /** 初始化view的位置信息 */
-  private point (jingView: JingView, view: BrowserView, window: BrowserWindow) {
+  private point(jingView: JingView, view: BrowserView, window: BrowserWindow) {
     if (jingView.hasSetPointed === false) {
       jingView.hasSetPointed = true;
       const bounds = window.getBounds();
@@ -235,18 +237,18 @@ export default class JingWindow {
         case 'CurrentWindowHide':
           jingView.viewMode = 'CurrentWindowShow';
         case 'NewWindow':
-          view.setBounds({ x: 0, y: TOOLBAR_HEIGHT, height: bounds.height - TOOLBAR_HEIGHT, width: bounds.width });
+          view.setBounds({x: 0, y: TOOLBAR_HEIGHT, height: bounds.height - TOOLBAR_HEIGHT, width: bounds.width});
           break;
         case 'DialogFullHeight':
-          view.setAutoResize({ height: true });
-          view.setBounds({ x: jingView.point.x || DEF_VIEW_POINT.x, y: TOOLBAR_HEIGHT, height: bounds.height - TOOLBAR_HEIGHT, width: jingView.point.width || DEF_VIEW_POINT.width });
+          view.setAutoResize({height: true});
+          view.setBounds({x: jingView.point.x || DEF_VIEW_POINT.x, y: TOOLBAR_HEIGHT, height: bounds.height - TOOLBAR_HEIGHT, width: jingView.point.width || DEF_VIEW_POINT.width});
           break;
         case 'DialogFullWidth':
-          view.setAutoResize({ width: true });
-          view.setBounds({ x: 0, y: jingView.point.y || DEF_VIEW_POINT.y, height: jingView.point.height || DEF_VIEW_POINT.height, width: bounds.width });
+          view.setAutoResize({width: true});
+          view.setBounds({x: 0, y: jingView.point.y || DEF_VIEW_POINT.y, height: jingView.point.height || DEF_VIEW_POINT.height, width: bounds.width});
           break;
         case 'Dialog':
-          view.setBounds({ x: jingView.point.x || DEF_VIEW_POINT.x, y: jingView.point.y || DEF_VIEW_POINT.y, height: jingView.point.height || DEF_VIEW_POINT.height, width: jingView.point.width || DEF_VIEW_POINT.width });
+          view.setBounds({x: jingView.point.x || DEF_VIEW_POINT.x, y: jingView.point.y || DEF_VIEW_POINT.y, height: jingView.point.height || DEF_VIEW_POINT.height, width: jingView.point.width || DEF_VIEW_POINT.width});
           break;
       }
     }

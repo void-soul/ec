@@ -1,7 +1,7 @@
 <template>
   <div class="all-box  z-max text-white">
     <q-toolbar class="tool toolbar q-electron-drag">
-      <q-tabs v-model="viewid"
+      <q-tabs v-model="activeId"
               dense
               shrink
               inline-label
@@ -13,13 +13,17 @@
               indicator-color="transparent"
               @mousewheel="scrollMenu($event)">
         <q-tab v-for="(item,index) in views"
-               :key="item.viewid"
-               :name="item.viewid"
+               :key="item.id"
+               :name="item.id"
                ripple
                :title="item.title"
-               @click="active(item.viewid)"
-               @contextmenu="contextMenu(item.viewid)"
-               :class="{'q-bg-loading': item.loading, 'q-bg-error': item.fail, 'q-bg-free': item.free, 'q-tab-no-0': index > 0, 'q-last': index === views.length - 1}">
+               @click="active(item.id)"
+               @contextmenu="contextMenu(item.id)"
+               :class="{
+                 'q-bg-loading': item.netState === 'loading',
+                 'q-bg-error': item.netState === 'failed',
+                 'q-tab-no-0': index > 0,
+                 'q-last': index === views.length - 1}">
           <img :src="item.icon"
                class="q-tab-icon"
                v-if="item.icon">
@@ -27,11 +31,11 @@
           <q-space />
           <q-btn icon="close"
                  flat
-                 v-if="item.close"
+                 v-if="item.closeMode === 'Enabled' || item.closeMode === 'EnabledAndConfirm'"
                  dense
                  alert="red"
                  size="xs"
-                 @click.native.stop="closeView(item.viewid)"
+                 @click.native.stop="closeView(item.id)"
                  :ripple="false"
                  :stretch="false" />
         </q-tab>
@@ -80,7 +84,7 @@
                @click="forward"
                title="跳到下一页"
                icon="chevron_right"></q-btn>
-        <q-btn v-if="views[activeIndex].loading"
+        <q-btn v-if="views[activeIndex].netState === 'loading'"
                dense
                flat
                :ripple="false"
@@ -172,14 +176,21 @@ import Sortable from 'sortablejs';
 export default {
   data () {
     return {
-      sortAble: null
+      sortUtil: null,
+      views: [],
+      activeId: 0,
+      activeIndex: 0,
+      win: null,
+      activeUrl: ''
     };
   },
-  created () {
+  async created () {
+    this.win = window.brage.getWindow();
+    this.views = await this.win.getViews();
     this.$nextTick(() => {
       const tabsBox = document.querySelector('.q-tabs__content');
       if (tabsBox) {
-        this.sortAble = new Sortable(tabsBox, {
+        this.sortUtil = new Sortable(tabsBox, {
           onEnd: ({ oldIndex, newIndex }) => {
             const $li = tabsBox.children[newIndex];
             const $oldLi = tabsBox.children[oldIndex];
@@ -197,15 +208,18 @@ export default {
       }
     });
   },
+  beforeDestroy () {
+    if (this.sortUtil) {
+      this.sortUtil.destory();
+    }
+  },
   methods: {
     close () {
-      window.brage.do(`window-close-${ this.windowid }`);
+      this.win.destroy();
     },
     toggle () {
-      window.brage.do(`window-toggle-${ this.windowid }`);
     },
     minimize () {
-      window.brage.do(`window-min-${ this.windowid }`);
     },
     scrollMenu (event) {
       let index = this.views.findIndex((item) => {
@@ -222,19 +236,28 @@ export default {
       }
     },
     open () {
-      window.brage.do(`view-refresh-${ this.viewid }`, this.activeUrl);
+      window.brage.getView(this.activeId).loadURL(this.activeUrl);
     },
     back () {
-      window.brage.do(`view-back-${ this.viewid }`);
+      window.brage.getView(this.activeId).goBack();
     },
     forward () {
-      window.brage.do(`view-forward-${ this.viewid }`);
+      window.brage.getView(this.activeId).goForward();
     },
     refresh () {
-      window.brage.do(`view-refresh-${ this.viewid }`);
+      window.brage.getView(this.activeId).loadURL();
     },
     stop () {
-      window.brage.do(`view-stop-${ this.viewid }`);
+      window.brage.getView(this.activeId).stop();
+    },
+    active (id) {
+      this.win.active({ id });
+    },
+    closeView (id) {
+      window.brage.getWindow().remove({ id });
+    },
+    contextMenu (id) {
+      window.brage.getWindow().contextMenu(id);
     }
   }
 };

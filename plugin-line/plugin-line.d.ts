@@ -905,6 +905,12 @@ declare global {
     getViews(): Promise<JingView[]>;
     /** 打开右键菜单 */
     contextMenu(viewId: number): void;
+    /** 获取窗体相关的id */
+    getIds(): Promise<{
+      id: number;
+      webContentId: number;
+      activeId: number;
+    }>;
   }
   class NoticeEvent {
     on(channel: 'did-finish-load', listener: (viewid: number) => void): void;
