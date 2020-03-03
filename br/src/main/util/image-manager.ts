@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileManager } from '@/main/util/file-manager';
-import { fromBuffer } from 'file-type';
+import {fileManager} from '@/main/util/file-manager';
+import {fromBuffer} from 'file-type';
 import icojs from 'icojs';
 import sharp from 'sharp';
 import {
@@ -10,8 +10,9 @@ import {
   nativeImage,
   NativeImage
 } from 'electron';
-import { Buffer } from 'buffer';
-import { getConfig } from '@/main/util/config';
+import {Buffer} from 'buffer';
+import {getConfig} from '@/main/util/config';
+import log from 'electron-log';
 const sharpQuality = 80;
 const iconSize = {
   width: 16,
@@ -52,11 +53,11 @@ class ImageManager {
     this.icons = {};
   }
 
-  getDefIcon () {
+  getDefIcon() {
     return this.defIcon;
   }
 
-  getWindowIcon () {
+  getWindowIcon() {
     return this.defWindowIconNative;
   }
 
@@ -67,7 +68,7 @@ class ImageManager {
    * @returns
    * @memberof ImageManager
    */
-  async parseIco (url: string) {
+  async parseIco(url: string) {
     if (!this.icons![url]) {
       const res = await fileManager.downLoad2Buffer(url);
       let data = Buffer.from(res.data, 'binary');
@@ -92,7 +93,7 @@ class ImageManager {
    * @param {string} url
    * @memberof ImageManager
    */
-  async copyImageFromUrl (url: string) {
+  async copyImageFromUrl(url: string) {
     const res = await fileManager.downLoad2Buffer(url);
     const data = Buffer.from(res.data, 'binary');
     const img = nativeImage.createFromBuffer(data);
@@ -107,7 +108,7 @@ class ImageManager {
    * @param {boolean} [local=true]
    * @memberof ImageManager
    */
-  async fixSize (filepath: string, local = true) {
+  async fixSize(filepath: string, local = true) {
     if (local === false) {
       filepath = await fileManager.downdLoad2Tmp(filepath);
       sharp.cache(false);
@@ -121,9 +122,9 @@ class ImageManager {
         const maxFile = parseInt(getConfig('VUE_APP_FILE_MAX_SIZE')!, 10);
         if (meta.width - maxFile < 0 && meta.height - maxFile < 0) {
           if (meta.width > meta.height) {
-            img.resize(maxFile, null, { fit: sharp.fit.outside });
+            img.resize(maxFile, null, {fit: sharp.fit.outside});
           } else {
-            img.resize(null, maxFile, { fit: sharp.fit.outside });
+            img.resize(null, maxFile, {fit: sharp.fit.outside});
           }
         }
         await img.toFile(filepath);
@@ -145,14 +146,14 @@ class ImageManager {
    * @returns
    * @memberof ImageManager
    */
-  async reSize (data: Buffer, { width, height }: {width?: number; height?: number}) {
+  async reSize(data: Buffer, {width, height}: {width?: number; height?: number}) {
     sharp.cache(false);
     try {
       return await sharp(data).resize(width, height, {
         fit: sharp.fit.outside
       }).toBuffer();
     } catch (error) {
-      console.error(error);
+      log.error(error);
       return data;
     }
   }

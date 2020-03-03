@@ -1,11 +1,12 @@
-import { JingPlugin, ContextMenu, PluginManifest } from 'plugin-line';
+import {JingPlugin, ContextMenu, PluginManifest} from 'plugin-line';
 import path from 'path';
 import fs from 'fs';
 import vm from 'vm';
 import * as util from '@/main/util';
-import { app, nativeImage, ContextMenuParams, Menu, MenuItemConstructorOptions, BrowserWindow, webContents, WebContents } from 'electron';
+import {app, nativeImage, ContextMenuParams, Menu, MenuItemConstructorOptions, BrowserWindow, webContents, WebContents} from 'electron';
 import JingWindow from './window';
 import JingView from './view';
+import log from 'electron-log';
 
 interface Plugin extends JingPlugin {
   name: string;
@@ -26,7 +27,7 @@ class JingApp {
   private plugins: Plugin[] = [];
   private injectJsItems: Array<{rule?: RegExp; code: string}> = [];
   private injectCssItems: Array<{rule?: RegExp; code: string}> = [];
-  async loadPlugin () {
+  async loadPlugin() {
     const pluginPath = path.join(app.getPath('userData'), 'plugin');
     const dirs = await fs.promises.readdir(pluginPath);
     for (const dir of dirs) {
@@ -35,26 +36,26 @@ class JingApp {
       const indexFile = path.join(pluginPath, dir, 'js', 'index.js');
       // 如果是目录、index.js存在,开始初始化
       if (stat.isDirectory() && fs.existsSync(indexFile)) {
-        const js = await fs.promises.readFile(indexFile, { encoding: 'utf-8' });
+        const js = await fs.promises.readFile(indexFile, {encoding: 'utf-8'});
         const PluginBuild = vm.runInThisContext(js.toString());
         const plugin = PluginBuild(util) as Plugin;
         // 读取manifest.json
-        const manifestData = await fs.promises.readFile(path.join(pluginPath, dir, 'manifest.json'), { encoding: 'utf-8' });
+        const manifestData = await fs.promises.readFile(path.join(pluginPath, dir, 'manifest.json'), {encoding: 'utf-8'});
         const manifest = JSON.parse(manifestData.toString()) as PluginManifest;
         Object.assign(plugin, manifest);
         if (manifest.rule) {
-          console.log(manifest.rule);
+          log.info(manifest.rule);
           plugin.rule = new RegExp(manifest.rule);
         }
         for (const js of manifest.injectJs) {
-          const code = await fs.promises.readFile(path.join(pluginPath, dir, 'js', `${ js[1] }.js`), { encoding: 'utf-8' });
+          const code = await fs.promises.readFile(path.join(pluginPath, dir, 'js', `${ js[1] }.js`), {encoding: 'utf-8'});
           const rule = js[0] ? new RegExp(js[0]) : undefined;
-          this.injectJsItems.push({ code, rule });
+          this.injectJsItems.push({code, rule});
         }
         for (const js of manifest.injectCss) {
-          const code = await fs.promises.readFile(path.join(pluginPath, dir, 'css', `${ js[1] }.css`), { encoding: 'utf-8' });
+          const code = await fs.promises.readFile(path.join(pluginPath, dir, 'css', `${ js[1] }.css`), {encoding: 'utf-8'});
           const rule = js[0] ? new RegExp(js[0]) : undefined;
-          this.injectCssItems.push({ code, rule });
+          this.injectCssItems.push({code, rule});
         }
         // 读取icon
         const iconFile = path.join(pluginPath, dir, 'icon.png');
@@ -69,14 +70,14 @@ class JingApp {
   }
 
   /** 当创建新window时调用此函数 */
-  onNewWindow (win: JingWindow): void {
+  onNewWindow(win: JingWindow): void {
     for (const plugin of this.plugins) {
       plugin.onNewWindow(win);
     }
   }
 
   /** 注册全局快捷键时调用 */
-  shotMenu (): void {
+  shotMenu(): void {
     const menus = new Array<MenuItemConstructorOptions>();
     for (const plugin of this.plugins) {
       const plMenus = plugin.shotMenu();
@@ -88,7 +89,7 @@ class JingApp {
   }
 
   /** 在window上右键点击、window的全局菜单时，本插件追加的右键菜单,此菜单只会在窗口初始化时、view变化调用 */
-  windowContext (win: JingWindow, view: JingView) {
+  windowContext(win: JingWindow, view: JingView) {
     const menus = new Array<MenuItemConstructorOptions>();
     for (const plugin of this.plugins) {
       const plMenus = plugin.windowContext(win, view);
@@ -102,7 +103,7 @@ class JingApp {
   }
 
   /** 在view上右键点击时，本插件追加的右键菜单 */
-  viewContext (win: JingWindow, view: JingView, param: ContextMenuParams) {
+  viewContext(win: JingWindow, view: JingView, param: ContextMenuParams) {
     const menus = new Array<MenuItemConstructorOptions>();
     const plugins = this.filter(webContents.fromId(view.webContentId).getURL());
     for (const plugin of plugins) {
@@ -116,7 +117,7 @@ class JingApp {
     });
   }
 
-  inject (content: WebContents) {
+  inject(content: WebContents) {
     const url = content.getURL();
     for (const item of this.injectJsItems) {
       if (!item.rule || item.rule.test(url)) {
@@ -130,18 +131,18 @@ class JingApp {
     }
   }
 
-  filter (url: string): Plugin[] {
+  filter(url: string): Plugin[] {
     return this.plugins.filter(item => !item.rule || item.rule.test(url));
   }
 
-  destory () {
+  destory() {
     for (const plugin of this.plugins) {
       plugin.destroy();
     }
     this.plugins.splice(0, this.plugins.length);
   }
 
-  private generMenu (menu: ContextMenu): MenuItemConstructorOptions {
+  private generMenu(menu: ContextMenu): MenuItemConstructorOptions {
     const menuResult: MenuItemConstructorOptions = {
       role: menu.role,
       type: menu.type,

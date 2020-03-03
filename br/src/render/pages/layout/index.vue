@@ -180,13 +180,11 @@ export default {
       views: [],
       activeId: 0,
       activeIndex: 0,
-      win: null,
       activeUrl: ''
     };
   },
   async created () {
-    this.win = window.brage.getWindow();
-    this.views = await this.win.getViews();
+    this.views = await window.brage.getWindow().getViews();
     this.$nextTick(() => {
       const tabsBox = document.querySelector('.q-tabs__content');
       if (tabsBox) {
@@ -215,11 +213,13 @@ export default {
   },
   methods: {
     close () {
-      this.win.destroy();
+      window.brage.getWindow().destroy();
     },
     toggle () {
+      window.brage.getWindow().toggle();
     },
     minimize () {
+      window.brage.getWindow().min();
     },
     scrollMenu (event) {
       let index = this.views.findIndex((item) => {
@@ -251,7 +251,7 @@ export default {
       window.brage.getView(this.activeId).stop();
     },
     active (id) {
-      this.win.active({ id });
+      window.brage.getWindow().active({ id });
     },
     closeView (id) {
       window.brage.getWindow().remove({ id });

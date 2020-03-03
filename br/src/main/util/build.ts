@@ -15,7 +15,6 @@ const preload = path.join(app.getAppPath(), 'preload.js');
  */
 export const buildWebPreferences = (uri: string) => {
   const url = uriParse(uri);
-  console.log(url);
   return {
     nodeIntegration: url.trustServer || url.buildIn,
     nodeIntegrationInWorker: false,

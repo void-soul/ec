@@ -4,6 +4,7 @@ import {UrlInfo, ViewOption, ViewNetState, ViewMode, CloseMode, ViewPoint} from 
 import {DEF_TITLE, DEF_VIEW_POINT} from '@/main/util/global';
 import JingWindow from './window';
 import {jingApp} from './app';
+import log from 'electron-log';
 const JINGVIEW_VIEID: {[id: number]: JingView} = {};
 const JINGVIEW_CONID: {[id: number]: JingView} = {};
 
@@ -63,7 +64,7 @@ export default class JingView {
       })
       // errorCode 在 neterror 文件中
       .on('did-fail-load', (_event: Event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
-        console.error(`fail-load:${ validatedURL },code: ${ errorCode }, error: ${ errorDescription },isMainFrame: ${ isMainFrame }`);
+        log.error(`fail-load:${ validatedURL },code: ${ errorCode }, error: ${ errorDescription },isMainFrame: ${ isMainFrame }`);
         if (errorCode < -100 && (this.url.fullUrl === validatedURL || `${ this.url.fullUrl }/` === validatedURL)) {
           this.netState = 'failed';
           const window = JingWindow.fromId(this.windowId);
@@ -174,7 +175,7 @@ export default class JingView {
       // 'did-attach-webview'
       // 'console-message'
       .on('preload-error', (_event: Event, preloadPath: string, error: Error) => {
-        console.error(`load js ${ preloadPath }failed! = ${ error.message }`);
+        log.error(`load js ${ preloadPath }failed! = ${ error.message }`);
       });
     // 'ipc-message'
     // 'ipc-message-sync'

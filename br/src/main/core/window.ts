@@ -227,6 +227,19 @@ export default class JingWindow {
     }
   }
 
+  toggle() {
+    const win = BrowserWindow.fromId(this.id);
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  }
+
+  min() {
+    BrowserWindow.fromId(this.id).minimize();
+  }
+
   /** 初始化view的位置信息 */
   private point(jingView: JingView, view: BrowserView, window: BrowserWindow) {
     if (jingView.hasSetPointed === false) {
