@@ -802,6 +802,16 @@ declare module 'plugin-line' {
     getViews(): JingView[];
     /** 右键菜单 */
     contextMenu(viewId: number): void;
+    /** 获取窗体相关的id */
+    getIds(): {
+      id: number;
+      webContentId: number;
+      activeId: number;
+    };
+    /** 切换最大化、还原 */
+    toggle(): void;
+    /** 最小化 */
+    min(): void;
   }
   /** 插件文件清单 */
   interface PluginManifest {
@@ -911,6 +921,10 @@ declare global {
       webContentId: number;
       activeId: number;
     }>;
+    /** 切换最大化、还原 */
+    toggle(): void;
+    /** 最小化 */
+    min(): void;
   }
   class NoticeEvent {
     on(channel: 'did-finish-load', listener: (viewid: number) => void): void;
