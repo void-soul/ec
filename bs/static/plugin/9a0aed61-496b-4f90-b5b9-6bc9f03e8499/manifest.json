@@ -1,0 +1,13 @@
+{
+  "name": "plugin-template",
+  "title": "view菜单",
+  "version": "0.0.1",
+  "description": "描述",
+  "required": true,
+  "beta": true,
+  "login": false,
+  "homepage": "主页",
+  "rule": ".*",
+  "injectJs": [],
+  "injectCss": []
+}

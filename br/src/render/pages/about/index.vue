@@ -184,7 +184,54 @@ export default {
     };
   },
   async created () {
-    this.views = await window.brage.getWindow().getViews();
+    const views = await window.brage.getWindow().getViews();
+    this.views = views;
+    window.brage.notice.on('did-finish-load', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].netState = 'finish';
+    });
+    window.brage.notice.on('did-fail-load', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].netState = 'failed';
+    });
+    window.brage.notice.on('did-fail-provisional-load', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].netState = 'cancel';
+    });
+    window.brage.notice.on('did-start-loading', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].netState = 'loading';
+    });
+    window.brage.notice.on('did-stop-loading', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].netState = 'none';
+    });
+    window.brage.notice.on('page-title-updated', (viewid, title) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].title = title;
+    });
+    window.brage.notice.on('page-favicon-updated', (viewid, icon) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].icon = icon;
+    });
+    window.brage.notice.on('page-url-updated', (viewid, url) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views[index].url = url;
+    });
+    window.brage.notice.on('add-view', (view) => {
+      this.views.push(view);
+      this.activeIndex = this.views.findIndex(item => item.id === this.activeId);
+    });
+    window.brage.notice.on('remove-view', (viewid) => {
+      const index = this.views.findIndex(item => item.id === viewid);
+      this.views.splice(index, 1);
+      this.activeIndex = this.views.findIndex(item => item.id === this.activeId);
+    });
+    window.brage.notice.on('active-view', (viewid) => {
+      this.activeIndex = this.views.findIndex(item => item.id === viewid);
+      console.log(viewid);
+      this.activeId = viewid;
+    });
     this.$nextTick(() => {
       const tabsBox = document.querySelector('.q-tabs__content');
       if (tabsBox) {
@@ -210,6 +257,7 @@ export default {
     if (this.sortUtil) {
       this.sortUtil.destory();
     }
+    window.brage.destory();
   },
   methods: {
     close () {
@@ -254,7 +302,7 @@ export default {
       window.brage.getWindow().active({ id });
     },
     closeView (id) {
-      window.brage.getWindow().remove({ id });
+      window.brage.getWindow().remove({ id }, true);
     },
     contextMenu (id) {
       window.brage.getWindow().contextMenu(id);

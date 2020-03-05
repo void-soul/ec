@@ -10,7 +10,7 @@
     "dev.": "vue-cli-service serve",
     "dist": "vue-cli-service --modern electron:build",
     "dist.": "vue-cli-service build",
-    "postinstall": "electron-builder install-app-deps  && node pack-post.js",
+    "postinstall": "electron-builder install-app-deps",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

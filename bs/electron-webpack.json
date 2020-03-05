@@ -1,0 +1,8 @@
+{
+  "title": true,
+  "main": {
+    "extraEntries": ["@/enhance/preload.ts", "@/enhance/common-css.ts"],
+    "sourceDirectory": "src"
+  },
+  "renderer": false
+}

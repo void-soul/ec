@@ -25,5 +25,6 @@ app.once('ready', async () => {
   new EventProxy();
   await jingApp.loadPlugin();
   /* eslint-disable no-new */
-  new JingWindow();
+  const win = new JingWindow();
+  win.open('https://www.baidu.com');
 });

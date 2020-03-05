@@ -5,6 +5,7 @@ import {DEF_TITLE, DEF_VIEW_POINT} from '@/main/util/global';
 import JingWindow from './window';
 import {jingApp} from './app';
 import log from 'electron-log';
+import {getConfig} from '../util/config';
 const JINGVIEW_VIEID: {[id: number]: JingView} = {};
 const JINGVIEW_CONID: {[id: number]: JingView} = {};
 
@@ -25,6 +26,8 @@ export default class JingView {
   hasSetPointed = false;
   isBuildIn = false;
   loaded = false;
+  closeEabled = false;
+  ding = false;
   constructor (option: ViewOption) {
     this.title = option.title || DEF_TITLE;
     this.viewMode = option.viewMode;
@@ -33,6 +36,7 @@ export default class JingView {
     this.point = option.point || DEF_VIEW_POINT;
     this.url = uriParse(option.url);
     this.isBuildIn = this.viewMode === 'Dialog' || this.viewMode === 'DialogFullHeight' || this.viewMode === 'DialogFullWidth';
+    this.closeEabled = this.closeMode === 'Enabled' || this.closeMode === 'EnabledAndConfirm' || (this.closeMode === 'OnlyDev' && getConfig('VUE_APP_DEV') === '1');
     const view = new BrowserView({
       webPreferences: buildWebPreferences(option.url)
     });
@@ -186,6 +190,8 @@ export default class JingView {
     // 'remote-get-current-window'
     // 'remote-get-current-web-contents'
     // 'remote-get-guest-web-contents'
+
+    this.dev();
   }
 
   static fromId(id: number) {
@@ -203,7 +209,7 @@ export default class JingView {
     if (url) {
       this.url = uriParse(url);
       webContents.fromId(this.webContentId).loadURL(this.url.fullUrl, options);
-    } else if (this.loaded === false) {
+    } else if (this.loaded === true) {
       webContents.fromId(this.webContentId).reload();
     } else {
       webContents.fromId(this.webContentId).loadURL(this.url.fullUrl, options);
@@ -333,5 +339,28 @@ export default class JingView {
 
   dev() {
     devToolSwitch(webContents.fromId(this.webContentId));
+  }
+
+  info() {
+    return {
+      id: this.id,
+      netState: this.netState,
+      webContentId: this.webContentId,
+      url: this.url,
+      icon: this.icon,
+      title: this.title,
+      windowId: this.windowId,
+      viewMode: this.viewMode,
+      canGoBack: this.canGoBack,
+      canGoForward: this.canGoForward,
+      closeMode: this.closeMode,
+      titleMode: this.titleMode,
+      point: this.point,
+      hasSetPointed: this.hasSetPointed,
+      isBuildIn: this.isBuildIn,
+      loaded: this.loaded,
+      closeEabled: this.closeEabled,
+      ding: false
+    }
   }
 }

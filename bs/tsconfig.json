@@ -1,0 +1,24 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "outDir": "./dist-js"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/util/uri.ts"
+  ],
+  "exclude": ["node_modules/**/*.ts"]
+}

@@ -1,13 +1,10 @@
-import {JingWindow, JingUtil, ContextMenu, ContextMenuParams} from 'plugin-line';
+import {JingUtil, ContextMenu, ContextMenuParams} from 'plugin-line';
 export abstract class JingPlugin {
   /** 脚本注入,rule=url;script\css 都是插件目录的相对路径指向的文件 */
   readonly injects: Array<{rule: RegExp; script: string[]; css: string[]}>;
-  /** 所在窗体 */
-  protected readonly win: JingWindow;
   /** 工具辅助 */
   protected readonly util: JingUtil;
-  constructor (win: JingWindow, util: JingUtil) {
-    this.win = win;
+  constructor (util: JingUtil) {
     this.util = util;
   }
   /** 卸载时回调 */

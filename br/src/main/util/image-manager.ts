@@ -36,7 +36,7 @@ class ImageManager {
     let iconPath: string | undefined;
     // 16x16图标读取，用于默认视窗图标
     if (process.env.NODE_ENV !== 'production') {
-      iconPath = path.join(app.getAppPath(), '../public/icons/16x16.png');
+      iconPath = path.join(app.getAppPath(), '../static/icons/16x16.png');
     } else {
       iconPath = path.join(app.getAppPath(), './icons/16x16.png');
     }
@@ -44,7 +44,7 @@ class ImageManager {
     this.defIcon = `data:png;base64,${ iconBuffer.toString('base64') }`;
     // 64x64图标读取，用于窗体图标
     if (process.env.NODE_ENV !== 'production') {
-      iconPath = path.join(app.getAppPath(), '../public/icons/64x64.png');
+      iconPath = path.join(app.getAppPath(), '../static/icons/64x64.png');
     } else {
       iconPath = path.join(app.getAppPath(), './icons/64x64.png');
     }

@@ -525,11 +525,12 @@ declare module 'plugin-line' {
   interface ViewFound {
     id: number;
     index: number;
-    view: JingView | null;
+    view?: JingView;
   }
   type ViewMode = 'CurrentWindowShow' | 'NewWindow' | 'CurrentWindowHide' | 'DialogFullHeight' | 'DialogFullWidth' | 'Dialog';
   type CloseMode = 'Enabled' | 'OnlyDev' | 'Forbid' | 'EnabledAndConfirm';
   type TitleMode = 'Fixed' | 'Follow';
+  type ContextMode = 'Custom' | 'Auto';
   /**
    * view的位置坐标，结合ViewMode使用。
    * ViewMode=CurrentWindowShow、NewWindow、CurrentWindowHide 时忽略此参数
@@ -547,7 +548,7 @@ declare module 'plugin-line' {
   interface ViewOption {
     /** 初始标题,非必须 */
     title?: string;
-    /** 视窗打开方式,分别是 当前窗口中打开、新窗口中打开、当前窗口中打开但不展示、对话框完整高度、对话框完整宽度、普通对话框*/
+    /** 视窗打开方式,分别是 当前窗口中打开、新窗口中打开、当前窗口中打开但不展示、对话框完整高度、对话框完整宽度、普通对话框;对话框属于内置功能模块，会接收功能消息 */
     viewMode: ViewMode;
     /** 视窗 关闭方式，分别是：可关闭、仅开发时可关闭、禁止关闭、可关闭但要询问用户 */
     closeMode: CloseMode;
@@ -562,6 +563,12 @@ declare module 'plugin-line' {
     };
     /** 要打开的地址 */
     url: string;
+    /** 所处插件名称 */
+    pluginName: string;
+    /** 页面的名称，用于插件内部区分 */
+    name: string;
+    /** 右键方式auto=自动, Custom=自定义*/
+    contextMode: ContextMode;
   }
   type ViewNetState = 'none' | 'finish' | 'loading' | 'failed' | 'cancel';
   /** 右键菜单声明 */
@@ -664,15 +671,15 @@ declare module 'plugin-line' {
     abstract onNewWindow(win: JingWindow): void;
     /** 注册全局快捷键时调用 */
     abstract shotMenu(): ContextMenu[];
-    /** 在window上右键点击、window的全局菜单时，本插件追加的右键菜单,view是指展示在window上的代表view的选项卡 */
-    abstract windowContext(win: JingWindow, view: JingView): ContextMenu[];
-    /** 在view上右键点击时，本插件追加的右键菜单 */
-    abstract viewContext(win: JingWindow, view: JingView, param: ContextMenuParams): ContextMenu[];
+    /** 自动弹出的右键菜单，当view的contextMode=auto时触发 */
+    abstract autoContextMenu(win: JingWindow, view: JingView, param: ContextMenuParams): ContextMenu[];
+    /** 自定义右键菜单,当view的contextMode=custom时触发 */
+    abstract customContextMenu(win: JingWindow, view: JingView, ...args: any[]): ContextMenu[];
     /** 插件的注销方法 */
     abstract destroy(): void;
   }
-  /** 视窗定义 */
-  class JingView {
+  /** viewinfo */
+  class JingViewInfo {
     /** 视窗id */
     id: number;
     /** 窗体的内容id */
@@ -687,24 +694,37 @@ declare module 'plugin-line' {
     title: string;
     /** 绑定的窗体id */
     windowId: number;
-    /** 视窗打开方式,分别是 当前窗口中打开、新窗口中打开、当前窗口中打开但不展示、对话框完整高度、对话框完整宽度、普通对话框*/
+    /** 视窗打开方式,分别是 当前窗口中打开、新窗口中打开、当前窗口中打开但不展示、对话框完整高度、对话框完整宽度、普通对话框;对话框属于内置功能模块，会接收功能消息 */
     viewMode: ViewMode;
     /** 当前视窗能返回吗 */
     canGoBack: boolean;
     /** 当前视窗能前进吗 */
     canGoForward: boolean;
+    /** 能否关闭 */
+    closeEabled: boolean;
     /** 视窗 关闭方式，分别是：可关闭、仅开发时可关闭、禁止关闭、可关闭但要询问用户 */
-    readonly closeMode: CloseMode;
+    closeMode: CloseMode;
     /** 视窗 标题改变方式, 分别是 固定、跟随（自动随页面内容） */
-    readonly titleMode: 'Fixed' | 'Follow';
+    titleMode: 'Fixed' | 'Follow';
     /** 初始坐标信息 */
-    readonly point: ViewPoint;
+    point: ViewPoint;
     /** 是否已经设置过位置？每个view只允许设置一次 */
     hasSetPointed: boolean;
     /** 是否内部专用的、功能特殊的插件产生的页面？这种页面可接收 window、view变动事件 */
-    isBuildIn: boolean;
+    feature: boolean;
     /** 是否加载过 */
     loaded: boolean;
+    /** 所处插件名称 */
+    pluginName: string;
+    /** 页面的名称，用于插件内部区分 */
+    name: string;
+    /** 右键方式auto=自动, Custom=自定义*/
+    contextMode: ContextMode;
+    /* 是否是一个对话框 */
+    isDialog: boolean;
+  }
+  /** 视窗定义 */
+  class JingView extends JingViewInfo {
     constructor (viewOption: ViewOption);
     /** 【有变更】url不传时，表示刷新 https://www.electronjs.org/docs/api/web-contents#contentsloadurlurl-options */
     loadURL(url?: string | undefined, options?: LoadURLOptions | undefined): Promise<void>;
@@ -766,30 +786,32 @@ declare module 'plugin-line' {
     destroy(ask?: boolean): Promise<void>;
     /** 切换开发者工具 */
     dev(): void;
+    /** 获取自身信息 */
+    info(): JingViewInfo;
+    /** 自定义右键菜单 */
+    customContextMenu(...args: any[]): void;
   }
   /** 窗体定义 */
   class JingWindow {
     /** 活跃视窗id */
     activeId: number;
-    /** 窗体的内容id */
-    webContentId: number;
     /** 窗体id */
     id: number;
     /** 窗体的视窗集合 */
-    views: JingView[];
+    views: JingViewInfo[];
     constructor (viewOption: ViewOption);
     /** 注销window */
     destroy(): void;
-    /** 通过url打开一个view */
+    /** 通过url打开一个普通的view  */
     open(url: string): void;
-    /** 通过完整的选项新增一个view */
+    /** 通过完整的选项新增一个定制的view */
     add(viewOption: ViewOption): void;
     /** 追加一个view */
     push(query: ViewQuery): void;
     /** 移除一个view，可指定是否关闭 */
-    remove(query?: ViewQuery, close?: boolean): void;
+    remove(query?: ViewQuery | undefined, close?: boolean | undefined): void;
     /** 匹配已经存在的view */
-    find(query?: ViewQuery): ViewFound;
+    find(query?: ViewQuery | undefined): ViewFound;
     /** 激活view */
     active(query?: ViewQuery): void;
     /** 从一个位置移动到另一个位置 */
@@ -799,19 +821,16 @@ declare module 'plugin-line' {
     /** 业务广播事件 */
     broadcast(channel: string, ...args: any[]): void;
     /** 获取视图列表 */
-    getViews(): JingView[];
-    /** 右键菜单 */
-    contextMenu(viewId: number): void;
+    getViews(): JingViewInfo[];
     /** 获取窗体相关的id */
     getIds(): {
       id: number;
-      webContentId: number;
       activeId: number;
     };
     /** 切换最大化、还原 */
     toggle(): void;
     /** 最小化 */
-    min(): void;
+    minimize(): void;
   }
   /** 插件文件清单 */
   interface PluginManifest {
@@ -827,11 +846,14 @@ declare module 'plugin-line' {
     homepage?: string;
     rule?: string;
     id: string;
+    creatDb: boolean;
+    sqlNames: string[];
     injectJs: string[][];
     injectCss: string[][];
   }
 }
 declare global {
+  let __static: string;
   interface JingViewMir {
     /** 【有变更】url不传时，表示刷新 https://www.electronjs.org/docs/api/web-contents#contentsloadurlurl-options */
     loadURL(url?: string | undefined, options?: LoadURLOptions | undefined): void;
@@ -891,6 +913,10 @@ declare global {
     destroy(ask?: boolean): void;
     /** 切换开发者工具 */
     dev(): void;
+    /** 获取自身信息 */
+    info(): Promise<JingViewInfo>;
+    /** 自定义右键菜单 */
+    customContextMenu(...args: any[]): void;
   }
   interface JingWindowMir {
     /** 注销window */
@@ -902,7 +928,7 @@ declare global {
     /** 追加一个view */
     push(query: ViewQuery): void;
     /** 移除一个view，可指定是否关闭 */
-    remove(query?: ViewQuery, close?: boolean): void;
+    remove(query?: ViewQuery | undefined, close?: boolean | undefined): void;
     /** 激活view */
     active(query?: ViewQuery): void;
     /** 从一个位置移动到另一个位置 */
@@ -913,18 +939,15 @@ declare global {
     broadcast(channel: string, ...args: any[]): void;
     /** 获取视图列表 */
     getViews(): Promise<JingView[]>;
-    /** 打开右键菜单 */
-    contextMenu(viewId: number): void;
     /** 获取窗体相关的id */
     getIds(): Promise<{
       id: number;
-      webContentId: number;
       activeId: number;
     }>;
     /** 切换最大化、还原 */
     toggle(): void;
     /** 最小化 */
-    min(): void;
+    minimize(): void;
   }
   class NoticeEvent {
     on(channel: 'did-finish-load', listener: (viewid: number) => void): void;
@@ -954,6 +977,8 @@ declare global {
       notice: NoticeEvent;
       /** 监听业务事件 */
       broadcast: (channel: string, listener: (...args: any[]) => void) => void;
+      /** 注销 */
+      destory: () => void;
     };
   }
 }

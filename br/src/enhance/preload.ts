@@ -2,6 +2,7 @@ import {ipcRenderer} from 'electron';
 const {windowid, viewid} = ipcRenderer.sendSync('get=id');
 const winCache: {[id: number]: JingWindowMir} = {};
 const viewCache: {[id: number]: JingViewMir} = {};
+const channels = new Array<string>();
 window.brage = {
   windowid,
   viewid,
@@ -22,7 +23,7 @@ window.brage = {
         contextMenu: (viewId: number) => ipcRenderer.invoke('handel=jing=window', _windowid, 'contextMenu', viewId),
         getIds: () => ipcRenderer.invoke('handel=jing=window', _windowid, 'getIds'),
         toggle: () => ipcRenderer.send('on=jing=window', _windowid, 'toggle'),
-        min: () => ipcRenderer.send('on=jing=window', _windowid, 'min')
+        minimize: () => ipcRenderer.send('on=jing=window', _windowid, 'min')
       };
     }
     return winCache[_windowid];
@@ -59,13 +60,25 @@ window.brage = {
         stopFindInPage: (action?) => ipcRenderer.send('on=jing=view', _viewid, 'stopFindInPage', action),
         print: (options?) => ipcRenderer.send('on=jing=view', _viewid, 'print', options),
         destroy: (ask) => ipcRenderer.send('on=jing=view', _viewid, 'destroy', ask),
-        dev: () => ipcRenderer.send('on=jing=view', _viewid, 'dev')
+        dev: () => ipcRenderer.send('on=jing=view', _viewid, 'dev'),
+        info: () => ipcRenderer.invoke('handel=jing=view', _viewid, 'info')
       }
     }
     return viewCache[_viewid];
   },
   notice: {
-    on: (channel: string, listener: (...args: any[]) => void) => ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags))
+    on: (channel: string, listener: (...args: any[]) => void) => {
+      channels.push(channel);
+      ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags));
+    }
   } as NoticeEvent,
-  broadcast: (channel: string, listener: (...args: any[]) => void) => ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags))
+  broadcast: (channel: string, listener: (...args: any[]) => void) => {
+    ipcRenderer.on(channel, (_event, ...ags: any[]) => listener(...ags));
+    channels.push(channel);
+  },
+  destory() {
+    for (const channel of channels) {
+      ipcRenderer.removeAllListeners(channel);
+    }
+  }
 };

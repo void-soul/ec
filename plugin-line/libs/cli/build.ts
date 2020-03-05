@@ -21,7 +21,9 @@ export const build = () => {
     rule: info.rule,
     injectJs: new Array<string[]>(),
     injectCss: new Array<string[]>(),
-    id: info.id
+    id: info.id,
+    creatDb: info.creatDb,
+    sqlNames: new Array<string>()
   };
   const jsNames = ['.js', '.ts'];
   const cssNames = ['.css', '.styl'];
@@ -37,6 +39,10 @@ export const build = () => {
         outInfo.injectJs.push([fs.readFileSync(rule, {encoding: 'utf-8'}).toString(), item]);
       }
     }
+  }
+  // 读取sql脚本
+  if (fs.existsSync('./src/sql')) {
+    outInfo.sqlNames = fs.readdirSync('./src/sql').filter(item => path.extname(item) === '.sql');
   }
   // 读取注入样式
   if (fs.existsSync('./src/inject/css')) {
@@ -84,6 +90,8 @@ export const build = () => {
       fs.unlinkSync('./dist/js/main.js');
     }
   }
+  // 复制建表文件
+  shell.cp('-R', './src/table/', './dist/table');
   shell.rm('-rf', './output/');
   const inners = fs.readdirSync('./dist');
   const zip = new Adm();

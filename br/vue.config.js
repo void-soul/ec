@@ -12,7 +12,7 @@ for (const page of pagesNames) {
   }
   pages[page] = {
     entry: `src/render/pages/${ page }/index.js`,
-    template: 'public/index.html',
+    template: 'static/index.html',
     filename: `${ page }.html`,
     title: process.env.VUE_APP_TITLE
   };
@@ -65,13 +65,13 @@ module.exports = {
       externals: ['sqlite3', 'sharp', 'better-sqlite3'],
       mainProcessFile: 'src/main/index.ts',
       mainProcessWatch: ['src/main/**/*', 'src/main/index.ts'],
-      // mainProcessArgs: ['--experimental-worker'],
+      mainProcessArgs: ['--experimental-worker'],
       builderOptions: {
         appId: 'org.jingrise.erp',
         productName: 'ec',
         // eslint-disable-next-line no-template-curly-in-string
         copyright: 'Copyright © year ${author}',
-        asar: true,
+        asar: false,
         files: ['**/*', 'preload/**/*'],
         publish: [
           {
@@ -83,19 +83,19 @@ module.exports = {
           oneClick: false,
           perMachine: true,
           allowToChangeInstallationDirectory: true,
-          installerIcon: 'public/icons/icon64.ico',
-          uninstallerIcon: 'public/icons/icon64.ico',
-          installerHeaderIcon: 'public/icons/icon64.ico'
+          installerIcon: 'static/icons/icon64.ico',
+          uninstallerIcon: 'static/icons/icon64.ico',
+          installerHeaderIcon: 'static/icons/icon64.ico'
         },
         nsisWeb: {
           appPackageUrl: 'http://down.jingrise.com'
         },
         win: {
-          icon: 'public/icons/icon.ico',
+          icon: 'static/icons/icon.ico',
           target: ['nsis']
         },
         mac: {
-          icon: 'public/icons/icon.icns'
+          icon: 'static/icons/icon.icns'
         }
       }
     },

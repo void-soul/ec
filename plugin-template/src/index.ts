@@ -1,21 +1,21 @@
-import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow} from 'plugin-line';
+import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow, JingView} from 'plugin-line';
 export default class extends JingPlugin {
-  onNewWindow(win: JingWindow): void {
-    console.log('onNewWindow', win);
+  autoContextMenu(_win: JingWindow, _view: JingView, _param: ContextMenuParams): ContextMenu[] {
+    console.log('autoContextMenu');
+    return [];
+  }
+
+  customContextMenu(_win: JingWindow, _view: JingView, ..._args: any[]): ContextMenu[] {
+    console.log('customContextMenu');
+    return [];
+  }
+
+  onNewWindow(_win: JingWindow): void {
+    console.log('onNewWindow');
   }
 
   shotMenu(): ContextMenu[] {
     console.log('shotMenu');
-    return [];
-  }
-
-  windowContext(win: JingWindow, viewId?: number | undefined): ContextMenu[] {
-    console.log('windowContext', win, viewId);
-    return [];
-  }
-
-  viewContext(win: JingWindow, param: ContextMenuParams): ContextMenu[] {
-    console.log('viewContext', win, param);
     return [];
   }
 

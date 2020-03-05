@@ -26,6 +26,6 @@
     "skipDefaultLibCheck": true,
     "inlineSourceMap": false
   },
-  "include": ["src/index.ts"],
+  "include": ["src/index.ts", "src/sql/**/*.ts"],
   "exclude": ["node_modules", "**/*.js"]
 }

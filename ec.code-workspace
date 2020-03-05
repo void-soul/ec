@@ -1,13 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "br"
-		},
-		{
 			"path": "plugin-line"
 		},
 		{
 			"path": "plugin-template"
+		},
+		{
+			"path": "bs"
 		}
 	],
 	"settings": {}
