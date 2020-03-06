@@ -1,5 +1,5 @@
 import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow, JingView} from 'plugin-line';
-export default class extends JingPlugin {
+class Plugin extends JingPlugin {
   autoContextMenu(_win: JingWindow, _view: JingView, _param: ContextMenuParams): ContextMenu[] {
     console.log('autoContextMenu');
     return [];
@@ -23,3 +23,5 @@ export default class extends JingPlugin {
     console.log('destory');
   }
 };
+
+export default Plugin;

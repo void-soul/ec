@@ -851,6 +851,21 @@ declare module 'plugin-line' {
     injectJs: string[][];
     injectCss: string[][];
   }
+
+  /** 数据库配置文件 */
+  function db(config: {
+    /** 对应的表名 */
+    tableName: string;
+    /** 表中的主键 */
+    ids?: string[];
+    /** 逻辑删除配置 */
+    logicDelete?: {
+      /** 逻辑删除状态名 */
+      stateFileName: string;
+      /** 逻辑删除时状态值 */
+      deleteState: string;
+    };
+  });
 }
 declare global {
   let __static: string;

@@ -8,6 +8,30 @@
 		},
 		{
 			"path": "bs"
+		},
+		{
+			"path": "D:\\pro\\my\\open-source\\sql-man"
+		},
+		{
+			"path": "D:\\pro\\play\\浏览器\\ec-0.0.1"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\sxmd3\\pc"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\sxmd3\\service"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\sxmd3\\wechat"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\dmce-erp-2.0\\browser"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\dmce-erp-2.0\\client-ssr"
+		},
+		{
+			"path": "D:\\pro\\jingrise\\dmce-erp-2.0\\service"
 		}
 	],
 	"settings": {}

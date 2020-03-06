@@ -17,7 +17,9 @@ if (fs.existsSync('./src/page')) {
 }
 const jsNames = ['.js', '.ts'];
 const cssNames = ['.css', '.styl'];
-const entries = {};
+const entries = {
+  index: ['src/index.ts']
+};
 // 读取注入脚本
 if (fs.existsSync('./src/inject/js')) {
   const syncNames = fs.readdirSync('./src/inject/js');
