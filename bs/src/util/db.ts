@@ -4,14 +4,11 @@ import {notEmptyString} from './string';
 import BetterSqlite3 from 'better-sqlite3';
 import log from 'electron-log';
 import {throwIf, throwIfNot} from './throw';
+import {DbOption, SQLManConfig, SqlCache} from 'sql-man';
+import {JingPlugin, ContextMenuParams, ContextMenu, JingWindow, JingView, UrlInfo} from 'plugin-line';
 
 const SKIP_KEYS = ['__tableName', '__ids', '__logicDelete'];
 const MAX_DEAL = 500;
-interface DbOption {
-  skipNullUndefined?: boolean;
-  skipEmptyString?: boolean;
-  tableName?: (serviceTableName: string) => string;
-}
 interface RunResults {
   changes: number;
   lastInsertRowid: Array<number | string>;
