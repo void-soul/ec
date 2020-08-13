@@ -34,7 +34,7 @@
     "nanoid": "2.1.11",
     "puppeteer-core": "2.1.1",
     "qiniu": "7.3.0",
-    "serialize-javascript": "3.0.0",
+    "serialize-javascript": "3.1.0",
     "sharp": "0.24.1",
     "socket.io-client": "2.3.0",
     "sortablejs": "1.10.2",
