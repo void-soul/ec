@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sentry/electron": "1.2.1",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "better-sqlite3": "6.0.1",
     "cheerio": "1.0.0-rc.3",
     "decimal.js": "10.2.0",
