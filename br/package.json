@@ -35,7 +35,7 @@
     "puppeteer-core": "2.1.1",
     "qiniu": "7.3.0",
     "serialize-javascript": "3.0.0",
-    "sharp": "0.24.1",
+    "sharp": "0.30.5",
     "socket.io-client": "2.3.0",
     "sortablejs": "1.10.2",
     "sqlite3": "4.1.1",
