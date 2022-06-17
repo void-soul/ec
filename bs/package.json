@@ -46,7 +46,7 @@
     "@types/sqlite3": "3.1.6",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
-    "electron": "8.0.3",
+    "electron": "15.5.5",
     "electron-builder": "22.3.6",
     "electron-log": "4.0.7",
     "electron-store": "5.1.1",
